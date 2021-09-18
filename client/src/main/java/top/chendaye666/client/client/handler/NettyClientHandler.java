@@ -14,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-@ChannelHandler.Sharable
+@ChannelHandler.Sharable // 在类上添加 @ChannelHandler.Sharable 注解，标记这个 ChannelHandler 可以被多个 Channel 使用。
 public class NettyClientHandler extends ChannelInboundHandlerAdapter {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
@@ -22,6 +22,12 @@ public class NettyClientHandler extends ChannelInboundHandlerAdapter {
     @Autowired
     private NettyClient nettyClient;
 
+    /**
+     * #channelInactive(ChannelHandlerContext ctx) 方法，实现在和服务端断开连接时，
+     * 调用 NettyClient 的 #reconnect() 方法，实现客户端定时和服务端重连
+     * @param ctx
+     * @throws Exception
+     */
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
         // 发起重连
@@ -30,6 +36,12 @@ public class NettyClientHandler extends ChannelInboundHandlerAdapter {
         super.channelInactive(ctx);
     }
 
+    /**
+     * #exceptionCaught(ChannelHandlerContext ctx, Throwable cause) 方法，在处理 Channel 的事件发生异常时，
+     * 调用 Channel 的 #close() 方法，断开和客户端的连接。
+     * @param ctx
+     * @param cause
+     */
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
         logger.error("[exceptionCaught][连接({}) 发生异常]", ctx.channel().id(), cause);
@@ -37,6 +49,12 @@ public class NettyClientHandler extends ChannelInboundHandlerAdapter {
         ctx.channel().close();
     }
 
+    /**
+     * #userEventTriggered(ChannelHandlerContext ctx, Object event) 方法，在客户端在空闲时，向服务端发送一次心跳，即心跳机制
+     * @param ctx
+     * @param event
+     * @throws Exception
+     */
     @Override
     public void userEventTriggered(ChannelHandlerContext ctx, Object event) throws Exception {
         // 空闲时，向服务端发起一次心跳

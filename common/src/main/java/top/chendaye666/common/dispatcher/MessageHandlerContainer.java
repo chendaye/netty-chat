@@ -13,6 +13,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+/**
+ * 创建 MessageHandlerContainer 类，作为 MessageHandler 的容器
+ */
 public class MessageHandlerContainer implements InitializingBean {
 
     private Logger logger = LoggerFactory.getLogger(getClass());

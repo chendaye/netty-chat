@@ -12,6 +12,9 @@ import java.util.List;
 
 /**
  * {@link Invocation} 解码器
+ * 创建 InvocationDecoder 类，实现从 TCP Socket 读取字节数组，反序列化成 Invocation
+ *
+ *  ByteToMessageDecoder 是 Netty 定义的解码 ChannelHandler 抽象类，在 TCP Socket 读取到新数据时，触发进行解码。
  */
 public class InvocationDecoder extends ByteToMessageDecoder {
 
@@ -40,6 +43,8 @@ public class InvocationDecoder extends ByteToMessageDecoder {
         in.readBytes(content);
         // 解析成 Invocation
         Invocation invocation = JSON.parseObject(content, Invocation.class);
+        /*最终，添加 List<Object> out 中，交给后续的 ChannelHandler 进行处理。
+         MessageDispatcher 将 Invocation 分发到其对应的 MessageHandler 中，进行业务逻辑的执行*/
         out.add(invocation);
         logger.info("[decode][连接({}) 解析到一条消息({})]", ctx.channel().id(), invocation.toString());
     }

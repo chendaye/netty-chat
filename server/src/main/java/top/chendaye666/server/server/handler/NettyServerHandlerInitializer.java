@@ -22,6 +22,7 @@ public class NettyServerHandlerInitializer extends ChannelInitializer<Channel> {
 
     @Autowired
     private MessageDispatcher messageDispatcher;
+
     @Autowired
     private NettyServerHandler nettyServerHandler;
 
