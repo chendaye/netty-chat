@@ -25,7 +25,7 @@ public class AuthRequestHandler implements MessageHandler<AuthRequest> {
             return;
         }
 
-        // ... 此处应有一段
+        //todo： ... 此处应有一段（验证成功）
 
         // 将用户和 Channel 绑定
         // 考虑到代码简化，我们先直接使用 accessToken 作为 User

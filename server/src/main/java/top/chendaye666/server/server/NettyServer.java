@@ -53,7 +53,10 @@ public class NettyServer {
         bootstrap.group(bossGroup, workerGroup) // 设置两个 EventLoopGroup 对象
                 .channel(NioServerSocketChannel.class)  // 指定 Channel 为服务端 NioServerSocketChannel
                 .localAddress(new InetSocketAddress(port)) // 设置 Netty Server 的端口
+                /*option() 方法对于server bootstrap而言，这个方法，是给parent channel 连接设置一些TCP底层相关的属性*/
                 .option(ChannelOption.SO_BACKLOG, 1024) // 服务端 accept 队列的大小
+                /*给每条child channel 连接设置一些TCP底层相关的属性，比如上面，我们设置了两种TCP属性，
+                其中 ChannelOption.SO_KEEPALIVE表示是否开启TCP底层心跳机制，true为开*/
                 .childOption(ChannelOption.SO_KEEPALIVE, true) // TCP Keepalive 机制，实现 TCP 层级的心跳保活功能
                 .childOption(ChannelOption.TCP_NODELAY, true) // 允许较小的数据包的发送，降低延迟
                 .childHandler(nettyServerHandlerInitializer);
