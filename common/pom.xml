@@ -38,6 +38,17 @@
             <version>5.2.5.RELEASE</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.google.protobuf</groupId>
+            <artifactId>protobuf-java</artifactId>
+            <version>3.18.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.protobuf</groupId>
+            <artifactId>protobuf-java-util</artifactId>
+            <version>3.18.0</version>
+        </dependency>
+
         <!-- 引入 SLF4J 依赖 -->
         <dependency>
             <groupId>org.slf4j</groupId>
