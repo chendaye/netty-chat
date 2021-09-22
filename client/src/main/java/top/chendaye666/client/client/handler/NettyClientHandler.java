@@ -1,8 +1,9 @@
 package top.chendaye666.client.client.handler;
 
+import com.alibaba.fastjson.JSON;
 import top.chendaye666.client.client.NettyClient;
 import top.chendaye666.client.message.heartbeat.HeartbeatRequest;
-import top.chendaye666.common.codec.Invocation;
+import top.chendaye666.common.codec.InvocationPojo;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
@@ -61,7 +62,10 @@ public class NettyClientHandler extends ChannelInboundHandlerAdapter {
         if (event instanceof IdleStateEvent) {
             logger.info("[userEventTriggered][发起一次心跳]");
             HeartbeatRequest heartbeatRequest = new HeartbeatRequest();
-            ctx.writeAndFlush(new Invocation(HeartbeatRequest.TYPE, heartbeatRequest))
+            ctx.writeAndFlush(InvocationPojo.Invocation.newBuilder()
+            .setType(HeartbeatRequest.TYPE)
+            .setMessage(JSON.toJSONString(heartbeatRequest))
+            .build())
                     .addListener(ChannelFutureListener.CLOSE_ON_FAILURE);
         } else {
             super.userEventTriggered(ctx, event);

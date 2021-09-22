@@ -1,8 +1,0 @@
-syntax = "proto3";// 设置相关版本
-//option java_package = "top.chendaye666.common.codec.protobuf";
-option java_outer_classname = "InvocationPojo"; // 生成的外部类名称，同时也是文件名
-// protobuf 使用 message管理数据
-message Invocation{ // 会在InvocationPojo外部类生成一个内部类Invocation，这个是真正发送的POJO对象
-    string type = 1;  // Invocation类中有一个属性 名称为id 类型为 string 1 表示 属性序号
-    string message = 2; // 2 也表是属性序号 不是值
-}

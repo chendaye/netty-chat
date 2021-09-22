@@ -1,24 +1,23 @@
 package top.chendaye666.server.config;
 
-import top.chendaye666.common.dispatcher.MessageDispatcher;
-import top.chendaye666.common.dispatcher.MessageHandlerContainer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import top.chendaye666.common.dispatcher.MessageHandlerProtobufContainer;
+import top.chendaye666.common.dispatcher.MessageProtobufDispatcher;
 
 /**
  * 创建 NettyServerConfig 配置类，创建 MessageDispatcher 和 MessageHandlerContainer Bean
  */
 @Configuration
 public class NettyServerConfig {
-
     @Bean
-    public MessageDispatcher messageDispatcher() {
-        return new MessageDispatcher();
+    public MessageProtobufDispatcher messageProtobufDispatcher(){
+        return new MessageProtobufDispatcher();
     }
 
     @Bean
-    public MessageHandlerContainer messageHandlerContainer() {
-        return new MessageHandlerContainer();
+    public MessageHandlerProtobufContainer messageHandlerProtobufContainer(){
+        return new MessageHandlerProtobufContainer();
     }
 
 }

@@ -1,0 +1,36 @@
+//    在Java项目中，除非你已经明确指定了java_package，否则package 用作Java的包名。即使您提供java_package，您仍然应该定义一个package，
+//    以避免在Protocol Buffers名称空间和非Java语言中的名称冲突。
+//
+//    在package的定义之后，我们可以看到两个定义的java选项：java_package和java_outer_classname。java_package指定您生成的类应该存放的Java包名称。
+//
+//    如果没有明确指定它，将会使用package定义的name作为包名，但这些名称通常不是适合的Java包名称（因为它们通常不以域名开头）。
+//    java_outer_classname选项定义应该包含此文件中所有类的类名。
+//
+//    如果你不明确地给出一个java_outer_classname，它将通过将文件名转换为驼峰的方式来生成。 例如，默认情况下，“my_proto.proto”将使用“MyProto”作为外部类名称。
+//
+//每个元素上的“= 1”，“= 2”标记标识字段在二进制编码中使用的唯一“标签”。你可以将经常使用或者重复的字段标注成1-15，
+// 因为在进行编码的时候因为少一个字节进行编码，所以效率更高。
+//
+//    required：必须提供该字段的值，否则被认为没有初始化。尝试构建一个未初始化的值被会抛出RuntimeException。
+//    解析一个为初始化的消息会抛出IOException。除此之外与optional一样。
+
+//    optional：可以设置或不设置该字段。 如果未设置可选字段值，则使用默认值。
+//    repeated：字段可能重复任意次数（包括零）。 重复值的顺序将保留在protocol buffer中。 将重复的字段视为动态大小的数组。
+//    （本列子中没有字段定义成repeated类型，定义成repeated类型其实就是java中List类型的字段）。
+//
+//    慎重使用required类型，将required类型的字段更改为optional会有一些问题，而将optional类型的字段更改为required类型，则没有问题。
+
+// 设置相关版本
+syntax = "proto3";
+package top.chendaye666.common.codec.protobuf;
+option java_package = "top.chendaye666.common.codec.protobuf";
+// 生成的外部类名称，同时也是文件名
+option java_outer_classname = "InvocationPojo";
+//optimize_for 加快解析的速度
+option optimize_for = SPEED;
+
+// 内部类
+message Invocation{ // 会在InvocationPojo外部类生成一个内部类Invocation，这个是真正发送的POJO对象
+    string type = 1;  // Invocation类中有一个属性 名称为id 类型为 string 1 表示 属性序号
+    string message = 2; // 2 也表是属性序号 不是值
+}

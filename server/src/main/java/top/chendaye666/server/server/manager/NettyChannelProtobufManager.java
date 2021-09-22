@@ -1,12 +1,12 @@
-package top.chendaye666.server.server;
+package top.chendaye666.server.server.manager;
 
-import top.chendaye666.common.codec.Invocation;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelId;
 import io.netty.util.AttributeKey;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+import top.chendaye666.common.codec.InvocationPojo;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -17,7 +17,7 @@ import java.util.concurrent.ConcurrentMap;
  * 2. 向客户端 Channel 发送消息
  */
 @Component
-public class NettyChannelManager {
+public class NettyChannelProtobufManager {
 
     /**
      * {@link Channel#attr(AttributeKey)} 属性中，表示 Channel 对应的用户
@@ -59,7 +59,7 @@ public class NettyChannelManager {
             logger.error("[addUser][连接({}) 不存在]", channel.id());
             return;
         }
-        // 设置属性
+        // 设置属性(channel 的 user的属性)
         channel.attr(CHANNEL_ATTR_KEY_USER).set(user);
         // 添加到 userChannels
         userChannels.put(user, channel);
@@ -75,6 +75,7 @@ public class NettyChannelManager {
         channels.remove(channel.id());
         // 移除 userChannels
         if (channel.hasAttr(CHANNEL_ATTR_KEY_USER)) {
+            // remove user 绑定的 channel
             userChannels.remove(channel.attr(CHANNEL_ATTR_KEY_USER).get());
         }
         logger.info("[remove][一个连接({})离开]", channel.id());
@@ -86,7 +87,7 @@ public class NettyChannelManager {
      * @param user 用户
      * @param invocation 消息体
      */
-    public void send(String user, Invocation invocation) {
+    public void send(String user, InvocationPojo.Invocation invocation) {
         // 获得用户对应的 Channel
         Channel channel = userChannels.get(user);
         if (channel == null) {
@@ -106,7 +107,7 @@ public class NettyChannelManager {
      *
      * @param invocation 消息体
      */
-    public void sendAll(Invocation invocation) {
+    public void sendAll(InvocationPojo.Invocation invocation) {
         for (Channel channel : channels.values()) {
             if (!channel.isActive()) {
                 logger.error("[send][连接({})未激活]", channel.id());

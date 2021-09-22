@@ -1,7 +1,7 @@
 package top.chendaye666.client.config;
 
-import top.chendaye666.common.dispatcher.MessageDispatcher;
-import top.chendaye666.common.dispatcher.MessageHandlerContainer;
+import top.chendaye666.common.dispatcher.MessageHandlerProtobufContainer;
+import top.chendaye666.common.dispatcher.MessageProtobufDispatcher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -12,13 +12,13 @@ import org.springframework.context.annotation.Configuration;
 public class NettyClientConfig {
 
     @Bean
-    public MessageDispatcher messageDispatcher() {
-        return new MessageDispatcher();
+    public MessageProtobufDispatcher messageProtobufDispatcher(){
+        return new MessageProtobufDispatcher();
     }
 
     @Bean
-    public MessageHandlerContainer messageHandlerContainer() {
-        return new MessageHandlerContainer();
+    public MessageHandlerProtobufContainer messageHandlerProtobufContainer(){
+        return new MessageHandlerProtobufContainer();
     }
 
 }

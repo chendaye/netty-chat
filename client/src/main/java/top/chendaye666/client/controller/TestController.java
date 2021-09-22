@@ -1,7 +1,7 @@
 package top.chendaye666.client.controller;
 
 import top.chendaye666.client.client.NettyClient;
-import top.chendaye666.common.codec.Invocation;
+import top.chendaye666.common.codec.InvocationPojo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,7 +17,10 @@ public class TestController {
     @PostMapping("/mock")
     public String mock(String type, String message) {
         // 创建 Invocation 对象
-        Invocation invocation = new Invocation(type, message);
+        InvocationPojo.Invocation invocation = InvocationPojo.Invocation.newBuilder()
+                .setType(type)
+                .setMessage(message)
+                .build();
         // 发送消息
         nettyClient.send(invocation);
         return "success";
