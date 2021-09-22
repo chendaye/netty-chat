@@ -16,7 +16,7 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import java.util.concurrent.TimeUnit;
 
-@Component
+@Component // 在类上，添加 @Component 注解，把 NettyClient 的创建交给 Spring 管理。
 public class NettyClient {
 
     /**
@@ -26,6 +26,7 @@ public class NettyClient {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
+    // serverHost 和 serverPort 属性，读取 application.yml 配置文件的 netty.server.host 和 netty.server.port 配置项
     @Value("${netty.server.host}")
     private String serverHost;
     @Value("${netty.server.port}")
@@ -45,19 +46,23 @@ public class NettyClient {
 
     /**
      * 启动 Netty Client
+     * #start() 方法，添加 @PostConstruct 注解，启动 Netty 客户端
      */
     @PostConstruct
     public void start() throws InterruptedException {
         // 创建 Bootstrap 对象，用于 Netty Client 启动
+        /*创建 Bootstrap 类，Netty 提供的客户端的启动类，方便我们初始化 Client*/
         Bootstrap bootstrap = new Bootstrap();
         // 设置 Bootstrap 的各种属性。
-        bootstrap.group(eventGroup) // 设置一个 EventLoopGroup 对象
-                .channel(NioSocketChannel.class)  // 指定 Channel 为客户端 NioSocketChannel
-                .remoteAddress(serverHost, serverPort) // 指定链接服务器的地址
-                .option(ChannelOption.SO_KEEPALIVE, true) // TCP Keepalive 机制，实现 TCP 层级的心跳保活功能
-                .option(ChannelOption.TCP_NODELAY, true) // 允许较小的数据包的发送，降低延迟
-                .handler(nettyClientHandlerInitializer);
+        bootstrap.group(eventGroup) // 设置一个 EventLoopGroup 对象,设置使用 eventGroup 线程组，实现客户端对服务端的连接、数据读写
+                .channel(NioSocketChannel.class)  // 指定 Channel 为客户端 NioSocketChannel,设置使用 NioSocketChannel 类，它是 Netty 定义的 NIO 服务端 TCP Client 实现类。
+                .remoteAddress(serverHost, serverPort) // 指定链接服务器的地址,置连接服务端的地址
+                .option(ChannelOption.SO_KEEPALIVE, true) // TCP Keepalive 机制，实现 TCP 层级的心跳保活功能,TCP Keepalive 机制，实现 TCP 层级的心跳保活功能
+                .option(ChannelOption.TCP_NODELAY, true) // 允许较小的数据包的发送，降低延迟,允许较小的数据包的发送，降低延迟
+                .handler(nettyClientHandlerInitializer); // 设置自己 Channel 的处理器为 NettyClientHandlerInitializer
         // 链接服务器，并异步等待成功，即启动客户端
+        /*调用 #connect() 方法，连接服务器，并异步等待成功，即启动客户端。同时，
+        添加回调监听器 ChannelFutureListener，在连接服务端失败的时候，调用 #reconnect() 方法，实现定时重连*/
         bootstrap.connect().addListener(new ChannelFutureListener() {
 
             @Override
@@ -93,6 +98,9 @@ public class NettyClient {
 
     /**
      * 关闭 Netty Server
+     * #shutdown() 方法，添加 @PreDestroy 注解，关闭 Netty 客户端
+     *
+     * 调用 Channel 的 #close() 方法，关闭 Netty Client，这样客户端就断开和服务端的连接
      */
     @PreDestroy
     public void shutdown() {
@@ -100,12 +108,13 @@ public class NettyClient {
         if (channel != null) {
             channel.close();
         }
-        // 优雅关闭一个 EventLoopGroup 对象
+        // 优雅关闭一个 EventLoopGroup 对象.例如说，它们里面的线程池。
         eventGroup.shutdownGracefully();
     }
 
     /**
      * 发送消息
+     * 因为 NettyClient 是客户端，所以无需像 NettyServer 一样使用「2.1.4 NettyChannelManager」维护 Channel 的集合
      *
      * @param invocation 消息体
      */

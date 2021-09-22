@@ -2,6 +2,10 @@ package top.chendaye666.common.dispatcher;
 
 import io.netty.channel.Channel;
 
+/**
+ * 创建 MessageHandler 接口，消息处理器接口
+ * @param <T>
+ */
 public interface MessageHandler<T extends Message> {
 
     /**
