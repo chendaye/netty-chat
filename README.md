@@ -16,7 +16,7 @@
 [Netty——Protobuf编解码](https://www.cnblogs.com/caoweixiong/p/14684453.html)
 [netty 4.1.45 protobuf 编解码实现](https://blog.csdn.net/liubenlong007/article/details/104231927)
 
-[基于IDEA实现Proto一站式编辑及编译](https://segmentfault.com/a/1190000038778590)
+[\【Protobuf专题】（一）基于IDEA实现Proto一站式编辑及编译](https://segmentfault.com/a/1190000038778590)
 
 > 在IDEA中安装插件。包括GenProtobuf和Protocol Buffer Editor，前者用于一键转换proto文件，后者用于编辑proto文件（未安装前，IDEA不支持对proto语法，没有高亮显示和自动补全提示）
 
