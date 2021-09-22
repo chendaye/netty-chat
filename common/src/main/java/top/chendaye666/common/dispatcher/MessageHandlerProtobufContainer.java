@@ -6,6 +6,8 @@ import org.springframework.aop.framework.AopProxyUtils;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import top.chendaye666.common.dispatcher.Message;
+import top.chendaye666.common.dispatcher.MessageHandler;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -16,7 +18,7 @@ import java.util.Objects;
 /**
  * 创建 MessageHandlerContainer 类，作为 MessageHandler 的容器
  */
-public class MessageHandlerContainer implements InitializingBean {
+public class MessageHandlerProtobufContainer implements InitializingBean {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -28,6 +30,10 @@ public class MessageHandlerContainer implements InitializingBean {
     @Autowired
     private ApplicationContext applicationContext;
 
+    /**
+     * 把所有的  MessageHandler Bean 放入 Map中备用
+     * @throws Exception
+     */
     @Override
     public void afterPropertiesSet() throws Exception {
         // 通过 ApplicationContext 获得所有 MessageHandler Bean
@@ -37,7 +43,7 @@ public class MessageHandlerContainer implements InitializingBean {
     }
 
     /**
-     * 获得类型对应的 MessageHandler
+     * 根据消息中的type，获得类型对应的 MessageHandler
      *
      * @param type 类型
      * @return MessageHandler
@@ -51,7 +57,9 @@ public class MessageHandlerContainer implements InitializingBean {
     }
 
     /**
-     * 获得 MessageHandler 处理的消息类
+     * 获得 MessageHandler 处理的消息类型
+     * 对于 AuthRequestHandler implements MessageHandler<AuthRequest>
+     * AuthRequest 就是要获取的消息类型
      *
      * @param handler 处理器
      * @return 消息类
@@ -62,7 +70,8 @@ public class MessageHandlerContainer implements InitializingBean {
         // 获得接口的 Type 数组
         Type[] interfaces = targetClass.getGenericInterfaces();
         Class<?> superclass = targetClass.getSuperclass();
-        while ((Objects.isNull(interfaces) || 0 == interfaces.length) && Objects.nonNull(superclass)) { // 此处，是以父类的接口为准
+        // 此处，是以父类的接口为准
+        while ((Objects.isNull(interfaces) || 0 == interfaces.length) && Objects.nonNull(superclass)) {
             interfaces = superclass.getGenericInterfaces();
             superclass = targetClass.getSuperclass();
         }

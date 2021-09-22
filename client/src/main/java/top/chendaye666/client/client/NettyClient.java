@@ -1,7 +1,7 @@
 package top.chendaye666.client.client;
 
 import top.chendaye666.client.client.handler.NettyClientHandlerInitializer;
-import top.chendaye666.common.codec.Invocation;
+import top.chendaye666.common.codec.InvocationPojo;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -118,7 +118,7 @@ public class NettyClient {
      *
      * @param invocation 消息体
      */
-    public void send(Invocation invocation) {
+    public void send(InvocationPojo.Invocation invocation) {
         if (channel == null) {
             logger.error("[send][连接不存在]");
             return;

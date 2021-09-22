@@ -20,6 +20,16 @@
 
 > 在IDEA中安装插件。包括GenProtobuf和Protocol Buffer Editor，前者用于一键转换proto文件，后者用于编辑proto文件（未安装前，IDEA不支持对proto语法，没有高亮显示和自动补全提示）
 
+
+
+[「IDEA插件精选」安利一个IDEA骚操作:一键生成方法的序列图](https://juejin.cn/post/6887719053931053064)
+
+> 通过 SequenceDiagram 这个插件，我们一键可以生成时序图。
+
+- 点击时序图中的类/方法即可跳转到对应的地方。
+- 从时序图中删除对应的类或者方法。
+- 将生成的时序图导出为 PNG 图片格式。
+
 # Netty 的理解
 
 > 实现 TCP协议
@@ -28,3 +38,15 @@
 - 编码解码器
 - 连接 channel  
 - client 端
+
+
+
+# Protobuf与netty结合
+
+> 在 Netty 数据传输过程中可以有很多选择，比如；字符串、json、xml、java 对象，但为了保证传输的数据具备；良好的通用性、方便的操作性和传输的高性能，
+> 我们可以选择 protobuf 作为我们的数据传输格式。
+
+> Netty为protobuf提供了两个编码器（ProtobufVarint32LengthFieldPrepender、ProtobufEncoder），
+> 两个解码器（ProtobufVarint32FrameDecoder、ProtobufDecoder）。
+
+> 写一个使用Protobuf作为序列化框架，Netty作为传输层的最简单的demo，需求描述：

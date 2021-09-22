@@ -1,8 +1,11 @@
 package top.chendaye666.server.server.handler;
 
-import top.chendaye666.common.codec.InvocationDecoder;
-import top.chendaye666.common.codec.InvocationEncoder;
-import top.chendaye666.common.dispatcher.MessageDispatcher;
+import io.netty.handler.codec.protobuf.ProtobufDecoder;
+import io.netty.handler.codec.protobuf.ProtobufEncoder;
+import io.netty.handler.codec.protobuf.ProtobufVarint32FrameDecoder;
+import io.netty.handler.codec.protobuf.ProtobufVarint32LengthFieldPrepender;
+import top.chendaye666.common.codec.InvocationPojo;
+import top.chendaye666.common.dispatcher.MessageProtobufDispatcher;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
@@ -21,7 +24,7 @@ public class NettyServerHandlerInitializer extends ChannelInitializer<Channel> {
     private static final Integer READ_TIMEOUT_SECONDS = 3 * 60;
 
     @Autowired
-    private MessageDispatcher messageDispatcher;
+    private MessageProtobufDispatcher messageProtobufDispatcher;
 
     @Autowired
     private NettyServerHandler nettyServerHandler;
@@ -34,12 +37,19 @@ public class NettyServerHandlerInitializer extends ChannelInitializer<Channel> {
         channelPipeline
                 // 空闲检测
                 .addLast(new ReadTimeoutHandler(READ_TIMEOUT_SECONDS, TimeUnit.SECONDS))
-                // 编码器
-                .addLast(new InvocationEncoder())
-                // 解码器
-                .addLast(new InvocationDecoder())
+                // 添加ProtobufVarint32FrameDecoder解码器，主要用于Protobuf的半包处理
+                .addLast(new ProtobufVarint32FrameDecoder())
+                /*添加ProtobufDecoder解码器，它的参数是com.google.protobuf.MessageLite，
+               实际上就是告诉ProtobufDecoder需要解码的目标类是什么，
+                   否则仅仅从字节数组中是无法判断出要解码的目标类型信息的（服务端需要解析的是客户端请求，所以是Request）*/
+                .addLast(new ProtobufDecoder(InvocationPojo.Invocation.getDefaultInstance()))
+                // 添加Protobuf...FieldPrepender编码器，主要用于Protobuf的半包处理
+                .addLast(new ProtobufVarint32LengthFieldPrepender())
+                // 添加ProtobufEncoder编码器
+                .addLast(new ProtobufEncoder())
+
                 // 消息分发器
-                .addLast(messageDispatcher)
+                .addLast(messageProtobufDispatcher)
                 // 服务端处理器
                 .addLast(nettyServerHandler)
         ;

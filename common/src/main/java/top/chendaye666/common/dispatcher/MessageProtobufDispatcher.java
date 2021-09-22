@@ -1,11 +1,11 @@
 package top.chendaye666.common.dispatcher;
 
-import top.chendaye666.common.codec.Invocation;
 import com.alibaba.fastjson.JSON;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import org.springframework.beans.factory.annotation.Autowired;
+import top.chendaye666.common.codec.InvocationPojo;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -30,10 +30,10 @@ import java.util.concurrent.Executors;
  * 丢到线程池中，然后调用 MessageHandler 的 #execute(Channel channel, T message) 方法，执行业务逻辑。
  */
 @ChannelHandler.Sharable
-public class MessageDispatcher extends SimpleChannelInboundHandler<Invocation> {
+public class MessageProtobufDispatcher extends SimpleChannelInboundHandler<InvocationPojo.Invocation> {
 
     @Autowired
-    private MessageHandlerContainer messageHandlerContainer;
+    private MessageHandlerProtobufContainer messageHandlerProtobufContainer;
     /*为什么要丢到 executor 线程池中呢？
     * 启动 Netty 服务端或者客户端时，都会设置其 EventGroup
     *
@@ -47,20 +47,25 @@ public class MessageDispatcher extends SimpleChannelInboundHandler<Invocation> {
     * */
     private final ExecutorService executor =  Executors.newFixedThreadPool(200);
 
+    /**
+     * 根据每一条消息（Invocation）的 type， 匹配对应的处理逻辑 （messageHandler）
+     * @param ctx
+     * @param invocation
+     */
     @Override
-    protected void channelRead0(ChannelHandlerContext ctx, Invocation invocation) {
-        // 获得 type 对应的 MessageHandler 处理器
-        MessageHandler messageHandler = messageHandlerContainer.getMessageHandler(invocation.getType());
-        // 获得  MessageHandler 处理器 的消息类
-        Class<? extends Message> messageClass = MessageHandlerContainer.getMessageClass(messageHandler);
-        // 解析消息
+    protected void channelRead0(ChannelHandlerContext ctx, InvocationPojo.Invocation invocation) {
+        // 获得 type 对应的 MessageHandler 处理器  type=AUTH_REQUEST
+        MessageHandler messageHandler = messageHandlerProtobufContainer.getMessageHandler(invocation.getType());
+        // 获得  MessageHandler 处理器 的消息类（也就是要把当前消息中的json 信息，解析成何种对象）
+        Class<? extends Message> messageClass = MessageHandlerProtobufContainer.getMessageClass(messageHandler);
+        // 解析消息 invocation中的message 解析成对应的 对象
         Message message = JSON.parseObject(invocation.getMessage(), messageClass);
         // 执行逻辑
         executor.submit(new Runnable() {
 
             @Override
             public void run() {
-                // noinspection unchecked
+                // noinspection unchecked，处理逻辑
                 messageHandler.execute(ctx.channel(), message);
             }
 
