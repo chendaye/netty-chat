@@ -14,6 +14,12 @@ public class TestController {
     @Autowired
     private NettyClient nettyClient;
 
+    /**
+     * 客户端 给 服务端发消息（消息类型有多种）
+     * @param type
+     * @param message
+     * @return
+     */
     @PostMapping("/mock")
     public String mock(String type, String message) {
         // 创建 Invocation 对象
