@@ -40,6 +40,7 @@
 - client 端
 
 
+[彻底理解Netty，这一篇文章就够了](https://juejin.cn/post/6844903703183360008)
 
 # Protobuf与netty结合
 
@@ -50,3 +51,8 @@
 > 两个解码器（ProtobufVarint32FrameDecoder、ProtobufDecoder）。
 
 > 写一个使用Protobuf作为序列化框架，Netty作为传输层的最简单的demo，需求描述：
+
+
+# client 连接池
+
+[netty client连接池设计](https://zhuanlan.zhihu.com/p/33805654)
