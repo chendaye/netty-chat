@@ -56,3 +56,7 @@
 # client 连接池
 
 [netty client连接池设计](https://zhuanlan.zhihu.com/p/33805654)
+
+[Netty Client实战——高并发连接池方案](https://itboyer.github.io/12466/#%E5%BC%95%E8%A8%80)
+
+[Netty连接池SimpleChannelPool和FixedChannelPool](https://juejin.cn/post/6844903433862905869)

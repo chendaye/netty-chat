@@ -73,7 +73,7 @@ public class NettyClient {
                     reconnect();
                     return;
                 }
-                // 连接成功
+                //todo： 连接成功, 获取 channel
                 channel = future.channel();
                 logger.info("[start][Netty Client 连接服务器({}:{}) 成功]", serverHost, serverPort);
             }
