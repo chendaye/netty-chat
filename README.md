@@ -56,3 +56,5 @@
 # client 连接池
 
 [netty client连接池设计](https://zhuanlan.zhihu.com/p/33805654)
+
+[FixedChannelPool](https://juejin.cn/post/6844903433862905869)
