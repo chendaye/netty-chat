@@ -34,7 +34,6 @@ import java.util.concurrent.TimeUnit;
  */
 @Component // 在类上，添加 @Component 注解，把 NettyClient 的创建交给 Spring 管理。
 public class NettyClient {
-
     /**
      * 重连频率，单位：秒
      */
@@ -45,6 +44,7 @@ public class NettyClient {
     // serverHost 和 serverPort 属性，读取 application.yml 配置文件的 netty.server.host 和 netty.server.port 配置项
     @Value("${netty.server.host}")
     private String serverHost;
+
     @Value("${netty.server.port}")
     private Integer serverPort;
 
@@ -60,13 +60,11 @@ public class NettyClient {
      */
     private Channel channel;
 
-
     /**
      * 连接池
      * 心跳超时时间
      */
     private static final Integer READ_TIMEOUT_SECONDS = 60;
-
 
     @Autowired
     private MessageProtobufDispatcher messageProtobufDispatcher;
@@ -76,7 +74,6 @@ public class NettyClient {
 
     /*连接池*/
     private FixedChannelPool fixedChannelPool;
-
 
     /**
      * 启动 Netty Client
@@ -94,7 +91,6 @@ public class NettyClient {
                 .option(ChannelOption.SO_KEEPALIVE, true) // TCP Keepalive 机制，实现 TCP 层级的心跳保活功能,TCP Keepalive 机制，实现 TCP 层级的心跳保活功能
                 .option(ChannelOption.TCP_NODELAY, true); // 允许较小的数据包的发送，降低延迟,允许较小的数据包的发送，降低延迟
 
-
         //todo: 连接池 https://blog.csdn.net/a975261294/article/details/77568782
         // https://gist.github.com/ku27/522e2556d2f119e26319
         fixedChannelPool = new FixedChannelPool(bootstrap, new ChannelPoolHandler() {
@@ -105,19 +101,16 @@ public class NettyClient {
                 // 刷新管道里的数据
                 ch.writeAndFlush(Unpooled.EMPTY_BUFFER); //flush掉所有写回的数据
             }
-
             /*获取连接池中的channel*/
             @Override
             public void channelAcquired(Channel ch) throws Exception {
 
             }
-
             /* 当channel不足时会创建，但不会超过限制的最大channel数*/
             @Override
             public void channelCreated(Channel ch) throws Exception {
                 // TODO Auto-generated method stub
                 NioSocketChannel channel = (NioSocketChannel) ch;
-
                 // 客户端逻辑处理   ClientHandler这个也是咱们自己编写的，继承ChannelInboundHandlerAdapter，实现你自己的逻辑
                 channel.pipeline()
                         // 空闲检测
@@ -139,7 +132,7 @@ public class NettyClient {
 
             }
         }, 6);
-
+        // 从连接池中获取 channel
         fixedChannelPool.acquire().addListener(
                 new FutureListener<Channel>(){
                     @Override
@@ -155,11 +148,11 @@ public class NettyClient {
                     }
                 }
         );
-
-
-
     }
 
+    /**
+     * 重连
+     */
     public void reconnect() {
         eventGroup.schedule(new Runnable() {
             @Override
@@ -213,5 +206,4 @@ public class NettyClient {
         // channel 放回连接池(写完数据)
         fixedChannelPool.release(channel);
     }
-
 }
