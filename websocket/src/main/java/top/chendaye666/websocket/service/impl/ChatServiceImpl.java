@@ -34,6 +34,7 @@ public class ChatServiceImpl implements ChatService{
     @Override
     public void register(JSONObject param, ChannelHandlerContext ctx) {
         String userId = (String)param.get("userId");
+        //todo: 注册 <user,channel>
         Constant.onlineUserMap.put(userId, ctx);
         String responseJson = new ResponseJson().success()
                 .setData("type", ChatType.REGISTER)
@@ -182,7 +183,8 @@ public class ChatServiceImpl implements ChatService{
                     .setData("type", ChatType.FILE_MSG_GROUP_SENDING)
                     .toString();
             groupInfo.getMembers().stream()
-                .forEach(member -> { 
+                .forEach(member -> {
+                    //todo: 把消息发送给谁
                     ChannelHandlerContext toCtx = Constant.onlineUserMap.get(member.getUserId());
                     if (toCtx != null && !member.getUserId().equals(fromUserId)) {
                         sendMessage(toCtx, responseJson);

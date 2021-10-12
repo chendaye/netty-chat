@@ -1,6 +1,8 @@
 package top.chendaye666.websocket.web.controller;
 
 import org.springframework.web.bind.annotation.*;
+import top.chendaye666.websocket.annotation.LoginToken;
+import top.chendaye666.websocket.annotation.PassToken;
 import top.chendaye666.websocket.model.vo.ResponseJson;
 import top.chendaye666.websocket.service.SecurityService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +19,7 @@ public class SecurityController {
 
     @RequestMapping(value = "login", method = RequestMethod.POST)
     @ResponseBody
+    @PassToken // 不需要鉴权
     public ResponseJson login(HttpSession session,
             @RequestParam String username,
             @RequestParam String password) {
@@ -25,6 +28,7 @@ public class SecurityController {
     
     @RequestMapping(value = "logout", method = RequestMethod.POST)
     @ResponseBody
+    @PassToken // 不需要鉴权
     public ResponseJson logout(HttpSession session) {
         return securityService.logout(session);
     }

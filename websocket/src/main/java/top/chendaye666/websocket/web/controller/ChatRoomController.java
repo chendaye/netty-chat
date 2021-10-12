@@ -2,6 +2,7 @@ package top.chendaye666.websocket.web.controller;
 
 
 import org.springframework.web.bind.annotation.RestController;
+import top.chendaye666.websocket.annotation.LoginToken;
 import top.chendaye666.websocket.model.vo.ResponseJson;
 import top.chendaye666.websocket.service.UserInfoService;
 import top.chendaye666.websocket.util.Constant;
@@ -27,6 +28,7 @@ public class ChatRoomController {
      */
     @RequestMapping(value = "/get_userinfo", method = RequestMethod.POST) 
     @ResponseBody
+    @LoginToken // 需要鉴权
     public ResponseJson getUserInfo(HttpSession session) {
         Object userId = session.getAttribute(Constant.USER_TOKEN);
         return userInfoService.getByUserId((String)userId);
