@@ -16,7 +16,7 @@ import io.netty.util.concurrent.Future;
 /**
  * 描述: Netty WebSocket服务器
  *      使用独立的线程启动
- * @author Kanarien 
+ * @author chendaye666 
  * @version 1.0
  * @date 2018年5月18日 上午11:22:51
  */

@@ -17,7 +17,7 @@ import java.util.HashMap;
  *        2. 获取格式化的文件大小 
  *        3. 高效的将文件转换成字节数组  
  * </p>
- * @author Kanarien 
+ * @author chendaye666 
  * @version 1.0
  * @date 2017年11月15日 下午9:05:10
  */

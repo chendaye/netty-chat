@@ -16,7 +16,7 @@ import java.util.concurrent.ConcurrentHashMap;
  *      3. onlineUser表，用userId为键，存放在线的客户端连接上下文；
  *      4. groupInfo表，用groupId为键，存放群信息；
  *      5. userInfo表，用username为键，存放用户信息。
- * @author Kanarien 
+ * @author chendaye666 
  * @version 1.0
  * @date 2018年5月18日 下午9:17:35
  */

@@ -20,7 +20,7 @@ import top.chendaye666.websocketold.model.vo.ResponseJson;
 
 /**
  * 描述: 全局错误统一处理控制中心
- * @author Kanarien 
+ * @author chendaye666 
  * @version 1.0
  * @date 2018年5月17日 下午3:27:49
  */

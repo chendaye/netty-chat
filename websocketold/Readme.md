@@ -1,7 +1,9 @@
+
 # 互联网实时聊天系统 (Spring + Netty + Websocket)
 
+[互联网实时聊天系统](https://github.com/Kanarienvogels/Chatroom)
+
 ## 0. 前言
-最近一段时间在学习Netty网络框架，又趁着计算机网络的课程设计，决定以Netty为核心，以WebSocket为应用层通信协议做一个互联网聊天系统，整体而言就像微信网页版一样，但考虑到这个聊天系统的功能非常多，因此只打算实现核心的聊天功能，包括单发、群发、文件发送，然后把项目与Spring整合做成开源、可拓展的方式，给大家参考、讨论、使用，欢迎大家的指点。
 
 关于Netty
 > Netty 是一个利用 Java 的高级网络的能力，隐藏其背后的复杂性而提供一个易于使用的 API 的客户端/服务器框架。
@@ -36,10 +38,10 @@
 
 ### 2.3 项目结构
 项目后端结构：
-![项目结构（后端）](http://kanarien-1254133416.cosgz.myqcloud.com/Image%20Bed/%E9%A1%B9%E7%9B%AE%E7%BB%93%E6%9E%84.JPG)
+![项目结构（后端）](http://chendaye666-1254133416.cosgz.myqcloud.com/Image%20Bed/%E9%A1%B9%E7%9B%AE%E7%BB%93%E6%9E%84.JPG)
 
 项目前端结构：
-![项目结构（前端）](http://kanarien-1254133416.cosgz.myqcloud.com/Image%20Bed/%E9%A1%B9%E7%9B%AE%E7%BB%93%E6%9E%84%EF%BC%88%E5%89%8D%E7%AB%AF%EF%BC%89.JPG)
+![项目结构（前端）](http://chendaye666-1254133416.cosgz.myqcloud.com/Image%20Bed/%E9%A1%B9%E7%9B%AE%E7%BB%93%E6%9E%84%EF%BC%88%E5%89%8D%E7%AB%AF%EF%BC%89.JPG)
 
 ### 2.4 系统功能模块
 系统只包括两个模块：登录模块和聊天管理模块。
@@ -50,13 +52,13 @@
 
 
 由于本系统涉及多个用户状态，有必要进行说明，下面给出本系统的用户状态转换图。
-![状态转换图](https://kanarien-1254133416.cos.ap-guangzhou.myqcloud.com/Image%20Bed/%E8%81%8A%E5%A4%A9%E5%AE%A4%20-%20%E7%94%A8%E6%88%B7%E7%8A%B6%E6%80%81%E8%BD%AC%E6%8D%A2%E5%9B%BE.png)
+![状态转换图](https://chendaye666-1254133416.cos.ap-guangzhou.myqcloud.com/Image%20Bed/%E8%81%8A%E5%A4%A9%E5%AE%A4%20-%20%E7%94%A8%E6%88%B7%E7%8A%B6%E6%80%81%E8%BD%AC%E6%8D%A2%E5%9B%BE.png)
 
 ### 2.6 系统界面
 系统聊天界面如下：
-![聊天界面](http://kanarien-1254133416.cosgz.myqcloud.com/Image%20Bed/%E8%81%8A%E5%A4%A9%E7%95%8C%E9%9D%A2.png)
+![聊天界面](http://chendaye666-1254133416.cosgz.myqcloud.com/Image%20Bed/%E8%81%8A%E5%A4%A9%E7%95%8C%E9%9D%A2.png)
 
-![聊天界面](http://kanarien-1254133416.cosgz.myqcloud.com/Image%20Bed/%E8%81%8A%E5%A4%A9%E7%95%8C%E9%9D%A202.png)
+![聊天界面](http://chendaye666-1254133416.cosgz.myqcloud.com/Image%20Bed/%E8%81%8A%E5%A4%A9%E7%95%8C%E9%9D%A202.png)
 
 ## 3. 核心编码
 这里只说明需要注意的地方，详细的请看源码
@@ -67,7 +69,7 @@
 /**
  * 描述: Netty WebSocket服务器
  *      使用独立的线程启动
- * @author Kanarien
+ * @author chendaye666
  * @version 1.0
  * @date 2018年5月18日 上午11:22:51
  */
@@ -116,12 +118,11 @@ public class WebSocketServer implements Runnable{
 * ······
 * 用户9  用户名：Member009  密码：009
 
-![登录入口](http://kanarien-1254133416.cosgz.myqcloud.com/Image%20Bed/%E8%81%8A%E5%A4%A9%E5%AE%A4%E7%99%BB%E5%BD%95url.png)
+![登录入口](http://chendaye666-1254133416.cosgz.myqcloud.com/Image%20Bed/%E8%81%8A%E5%A4%A9%E5%AE%A4%E7%99%BB%E5%BD%95url.png)
 
 ### 4.2 聊天演示
-![聊天演示](http://kanarien-1254133416.cosgz.myqcloud.com/Image%20Bed/%E8%81%8A%E5%A4%A9%E6%BC%94%E7%A4%BA.gif)
+![聊天演示](http://chendaye666-1254133416.cosgz.myqcloud.com/Image%20Bed/%E8%81%8A%E5%A4%A9%E6%BC%94%E7%A4%BA.gif)
 
 
 ---
 
-> Copyright © 2018, GDUT CSCW back-end Kanarien, All Rights Reserved
