@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 
 @Component
-public class WebSocketChildChannelHandler extends ChannelInitializer<SocketChannel>{
+public class WebSocketInitChannelHandler extends ChannelInitializer<SocketChannel>{
 
 	@Resource(name = "webSocketServerHandler")
 	private ChannelHandler webSocketServerHandler;
@@ -24,7 +24,9 @@ public class WebSocketChildChannelHandler extends ChannelInitializer<SocketChann
 		ch.pipeline().addLast("http-codec", new HttpServerCodec()); // HTTP编码解码器
 		ch.pipeline().addLast("aggregator", new HttpObjectAggregator(65536)); // 把HTTP头、HTTP体拼成完整的HTTP请求
 		ch.pipeline().addLast("http-chunked", new ChunkedWriteHandler()); // 方便大文件传输，不过实质上都是短的文本数据
+		// http-handler
 		ch.pipeline().addLast("http-handler", httpRequestHandler);
+		// websocket-handler
 		ch.pipeline().addLast("websocket-handler",webSocketServerHandler);
 	}
 
