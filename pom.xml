@@ -12,6 +12,8 @@
         <module>client</module>
         <module>common</module>
         <module>server</module>
+        <module>websocket</module>
+        <module>websocketold</module>
     </modules>
 
     <properties>
