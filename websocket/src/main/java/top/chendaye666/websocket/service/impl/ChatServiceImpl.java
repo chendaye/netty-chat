@@ -25,7 +25,12 @@ public class ChatServiceImpl implements ChatService{
             
     @Autowired
     private GroupInfoDao groupDao;
-    
+
+    /**
+     * 上线注册
+     * @param param
+     * @param ctx
+     */
     @Override
     public void register(JSONObject param, ChannelHandlerContext ctx) {
         String userId = (String)param.get("userId");
@@ -38,6 +43,12 @@ public class ChatServiceImpl implements ChatService{
                 , userId, Constant.onlineUserMap.size()));
     }
 
+    /**
+     * 单聊
+     * 消息格式：{"content":"content","type":"SINGLE_SENDING","status":200,"fromUserId":"001", "toUserId":"002"}
+     * @param param
+     * @param ctx
+     */
     @Override
     public void singleSend(JSONObject param, ChannelHandlerContext ctx) {
         String fromUserId = (String)param.get("fromUserId");
@@ -59,26 +70,18 @@ public class ChatServiceImpl implements ChatService{
         }
     }
 
+    /**
+     * 群聊
+     * @param param
+     * @param ctx
+     */
     @Override
     public void groupSend(JSONObject param, ChannelHandlerContext ctx) {
         
         String fromUserId = (String)param.get("fromUserId");
         String toGroupId = (String)param.get("toGroupId");
         String content = (String)param.get("content");
-        
-        /*String userId = (String)param.get("userId");
-        String fromUsername = (String)param.get("fromUsername");*/
-        /*String responseJson = new ResponseJson().success()
-                .setData("fromUsername", fromUsername)
-                .setData("content", content)
-                .setData("type", ChatType.GROUP_SENDING)
-                .toString();*/
-        /*Set<Entry<String, ChannelHandlerContext>> userCtxs = Constant.onlineUserMap.entrySet();
-        for (Entry<String, ChannelHandlerContext> userCtx : userCtxs) {
-            if (!userCtx.getKey().equals(userId)) {
-                sendMessage(userCtx.getValue(), responseJson);
-            }
-        }*/
+
         GroupInfo groupInfo = groupDao.getByGroupId(toGroupId);
         if (groupInfo == null) {
             String responseJson = new ResponseJson().error("该群id不存在").toString();
@@ -99,7 +102,11 @@ public class ChatServiceImpl implements ChatService{
                 });
         }
     }
-    
+
+    /**
+     * 下线
+     * @param ctx
+     */
     @Override
     public void remove(ChannelHandlerContext ctx) {
         Iterator<Entry<String, ChannelHandlerContext>> iterator = 
@@ -119,6 +126,11 @@ public class ChatServiceImpl implements ChatService{
         }
     }
 
+    /**
+     * 单聊文件发送
+     * @param param
+     * @param ctx
+     */
     @Override
     public void FileMsgSingleSend(JSONObject param, ChannelHandlerContext ctx) {
         String fromUserId = (String)param.get("fromUserId");
@@ -144,6 +156,11 @@ public class ChatServiceImpl implements ChatService{
         }
     }
 
+    /**
+     * 群聊文件发送
+     * @param param
+     * @param ctx
+     */
     @Override
     public void FileMsgGroupSend(JSONObject param, ChannelHandlerContext ctx) {
         String fromUserId = (String)param.get("fromUserId");
@@ -173,7 +190,11 @@ public class ChatServiceImpl implements ChatService{
                 });
         }
     }
-    
+
+    /**
+     * 聊天消息错误
+     * @param ctx
+     */
     @Override
     public void typeError(ChannelHandlerContext ctx) {
         String responseJson = new ResponseJson()
@@ -181,13 +202,13 @@ public class ChatServiceImpl implements ChatService{
                 .toString();
         sendMessage(ctx, responseJson);
     }
-    
 
-    
+    /**
+     * 发送消息
+     * @param ctx
+     * @param message
+     */
     private void sendMessage(ChannelHandlerContext ctx, String message) {
         ctx.channel().writeAndFlush(new TextWebSocketFrame(message));
     }
-
-   
-    
 }

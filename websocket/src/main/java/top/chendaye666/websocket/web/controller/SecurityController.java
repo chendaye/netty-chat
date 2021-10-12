@@ -1,17 +1,14 @@
 package top.chendaye666.websocket.web.controller;
 
+import org.springframework.web.bind.annotation.*;
 import top.chendaye666.websocket.model.vo.ResponseJson;
 import top.chendaye666.websocket.service.SecurityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
 
-@Controller
+@RestController
 public class SecurityController {
 
     @Autowired

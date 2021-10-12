@@ -18,7 +18,6 @@ import io.netty.util.concurrent.Future;
  *      使用独立的线程启动
  * @author chendaye666 
  * @version 1.0
- * @date 2018年5月18日 上午11:22:51
  */
 public class WebSocketServer implements Runnable{
 

@@ -7,7 +7,7 @@ import java.io.File;
  */
 public class DeleteUselessRepository {
 
-    private static String MAVEN_PATH = "D:\\apache-maven-3.6.0\\repository";
+    private static String MAVEN_PATH = "D:\\software\\maven\\repo";
 
     /**
      * 判断是否存在jar

@@ -1,4 +1,4 @@
-package top.chendaye666.websocket.web.websocket;
+package top.chendaye666.websocket.web.websocket.haddler;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -15,6 +15,9 @@ import io.netty.util.CharsetUtil;
 import top.chendaye666.websocket.util.Constant;
 import org.springframework.stereotype.Component;
 
+/**
+ * 处理 http 消息
+ */
 @Component
 @Sharable
 public class HttpRequestHandler extends SimpleChannelInboundHandler<Object> {

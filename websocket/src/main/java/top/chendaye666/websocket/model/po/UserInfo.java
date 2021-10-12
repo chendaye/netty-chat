@@ -2,6 +2,9 @@ package top.chendaye666.websocket.model.po;
 
 import java.util.List;
 
+/**
+ * 用户
+ */
 public class UserInfo {
 
     private String userId;

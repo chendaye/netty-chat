@@ -1,6 +1,7 @@
 package top.chendaye666.websocket.web.controller;
 
 
+import org.springframework.web.bind.annotation.RestController;
 import top.chendaye666.websocket.model.vo.ResponseJson;
 import top.chendaye666.websocket.service.UserInfoService;
 import top.chendaye666.websocket.util.Constant;
@@ -12,7 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
 
-@Controller
+@RestController
 @RequestMapping("/chatroom")
 public class ChatRoomController {
 

@@ -8,6 +8,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+/**
+ * 鉴权
+ */
 public class UserAuthInteceptor implements HandlerInterceptor {
 
     @Override
@@ -16,9 +19,7 @@ public class UserAuthInteceptor implements HandlerInterceptor {
         HttpSession session = request.getSession();
         Object userToken = session.getAttribute(Constant.USER_TOKEN);
         if (userToken == null) {
-            /*JsonMsgHelper.writeJson(response, new ResponseJson(HttpStatus.FORBIDDEN).setMsg("请登录"), 
-                    HttpStatus.FORBIDDEN);*/
-            response.sendRedirect("login");
+            response.sendError(400, "没有登陆");
             return false;
         }
         return true;

@@ -1,5 +1,6 @@
 package top.chendaye666.websocket.web.controller;
 
+import org.springframework.web.bind.annotation.RestController;
 import top.chendaye666.websocket.model.vo.ResponseJson;
 import top.chendaye666.websocket.service.FileUploadService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
-@Controller
+@RestController
 @RequestMapping("/chatroom")
 public class FileUploadController {
 

@@ -18,7 +18,6 @@ import java.util.concurrent.ConcurrentHashMap;
  *      5. userInfo表，用username为键，存放用户信息。
  * @author chendaye666 
  * @version 1.0
- * @date 2018年5月18日 下午9:17:35
  */
 public class Constant {
 

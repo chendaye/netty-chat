@@ -1,4 +1,4 @@
-package top.chendaye666.websocket.web.websocket;
+package top.chendaye666.websocket.web.websocket.haddler;
 
 
 import com.alibaba.fastjson.JSONObject;
@@ -15,6 +15,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 
+/**
+ * 处理 websocket 消息
+ */
 @Component
 @Sharable
 public class WebSocketServerHandler extends SimpleChannelInboundHandler<WebSocketFrame> {
@@ -67,6 +70,7 @@ public class WebSocketServerHandler extends SimpleChannelInboundHandler<WebSocke
         JSONObject param = null;
         try {
             param = JSONObject.parseObject(request);
+            System.out.println(param.toString());
         } catch (Exception e) {
             sendErrorMessage(ctx, "JSON字符串转换出错！");
             e.printStackTrace();

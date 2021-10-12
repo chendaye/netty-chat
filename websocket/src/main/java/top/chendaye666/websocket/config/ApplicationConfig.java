@@ -22,6 +22,7 @@ public class ApplicationConfig implements WebMvcConfigurer {
     @Bean
     public WebSocketServer getWebSocketServer() {
         WebSocketServer webSocketServer = new WebSocketServer();
+        // websocket 端口
         webSocketServer.setPort(3333);
         webSocketServer.setChildChannelHandler(webSocketChildChannelHandler);
         return webSocketServer;

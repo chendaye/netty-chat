@@ -3,6 +3,9 @@ package top.chendaye666.websocket.service;
 import com.alibaba.fastjson.JSONObject;
 import io.netty.channel.ChannelHandlerContext;
 
+/**
+ * 聊天服务
+ */
 public interface ChatService {
 
     public void register(JSONObject param, ChannelHandlerContext ctx);

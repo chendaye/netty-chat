@@ -2,6 +2,9 @@ package top.chendaye666.websocket.model.po;
 
 import java.util.List;
 
+/**
+ * 群
+ */
 public class GroupInfo {
 
     private String groupId;

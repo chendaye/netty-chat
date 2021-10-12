@@ -1,7 +1,7 @@
 
 # 互联网实时聊天系统 (Spring + Netty + Websocket)
 
-[互联网实时聊天系统](https://github.com/Kanarienvogels/Chatroom)
+[互联网实时聊天系统](https://github.com/Chendaye666vogels/Chatroom)
 
 ## 0. 前言
 

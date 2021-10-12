@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
  *      使用独立的线程启动
  * @author Chendaye666 
  * @version 1.0
- * @date 2018年5月18日 上午11:22:51
  */
 public class WebSocketServer implements Runnable{
 

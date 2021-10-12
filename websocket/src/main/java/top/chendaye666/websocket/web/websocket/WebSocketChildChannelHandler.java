@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 
 @Component
-public class WebSocketInitChannelHandler extends ChannelInitializer<SocketChannel>{
+public class WebSocketChildChannelHandler extends ChannelInitializer<SocketChannel>{
 
 	@Resource(name = "webSocketServerHandler")
 	private ChannelHandler webSocketServerHandler;

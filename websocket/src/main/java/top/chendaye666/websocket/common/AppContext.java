@@ -28,7 +28,7 @@ public class AppContext {
     private Thread nettyThread;
     
     /**
-     * 描述：Tomcat加载完ApplicationContext-main和netty文件后：
+     * 描述：Tomcat加载完后：
      *      1. 启动Netty WebSocket服务器；
      *      2. 加载用户数据；
      *      3. 加载用户交流群数据。
