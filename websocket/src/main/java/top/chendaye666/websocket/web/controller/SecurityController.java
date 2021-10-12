@@ -14,11 +14,7 @@ public class SecurityController {
     @Autowired
     private SecurityService securityService;
     
-    @RequestMapping(value = {"login", "/"}, method = RequestMethod.GET)
-    public String toLogin() {
-        return "login";
-    }
-    
+
     @RequestMapping(value = "login", method = RequestMethod.POST)
     @ResponseBody
     public ResponseJson login(HttpSession session,

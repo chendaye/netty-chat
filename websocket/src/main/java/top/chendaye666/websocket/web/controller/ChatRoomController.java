@@ -20,15 +20,7 @@ public class ChatRoomController {
     @Autowired
     private UserInfoService userInfoService;
     
-    /**
-     * 描述：登录成功后，调用此接口进行页面跳转
-     * @return
-     */
-    @RequestMapping(method = RequestMethod.GET)
-    public String toChatroom() {
-        return "chatroom";
-    }
-    
+
     /**
      * 描述：登录成功跳转页面后，调用此接口获取用户信息
      * @return
