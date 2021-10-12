@@ -8,13 +8,13 @@
         <outputRelativeToContentRoot value="true" />
         <module name="client" />
         <module name="server" />
-        <module name="websocketold" />
         <module name="common" />
-        <module name="websocket" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="socket" target="1.8" />
+      <module name="websocket" target="1.8" />
+      <module name="websocketold" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>
