@@ -49,7 +49,7 @@ public class MessageHandlerProtobufContainer implements InitializingBean {
      * @return MessageHandler
      */
     MessageHandler getMessageHandler(String type) {
-        System.out.println("ffff="+type);
+        System.out.println("invocation.type="+type);
         MessageHandler handler = handlers.get(type);
         if (handler == null) {
             throw new IllegalArgumentException(String.format("类型(%s) 找不到匹配的 MessageHandler 处理器", type));

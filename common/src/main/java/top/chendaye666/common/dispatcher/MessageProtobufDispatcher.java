@@ -54,6 +54,7 @@ public class MessageProtobufDispatcher extends SimpleChannelInboundHandler<Invoc
      */
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, InvocationPojo.Invocation invocation) {
+        System.out.println("invocation="+invocation.toString());
         // 获得 type 对应的 MessageHandler 处理器  type=AUTH_REQUEST
         MessageHandler messageHandler = messageHandlerProtobufContainer.getMessageHandler(invocation.getType());
         // 获得  MessageHandler 处理器 的消息类（也就是要把当前消息中的json 信息，解析成何种对象）
