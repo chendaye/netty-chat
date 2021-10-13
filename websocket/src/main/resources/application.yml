@@ -1,2 +1,46 @@
 server:
   port: 7777
+
+# https://segmentfault.com/a/1190000039005979
+spring:
+  datasource:
+    druid:
+      driverClassName: com.mysql.jdbc.Driver
+      url: jdbc:mysql://hadoop01:3306/netty?autoReconnect=true&useUnicode=true&characterEncoding=utf8
+      username: root
+      password: root
+
+      # WebStatFilter配置
+      web-stat-filter:
+        enabled: true
+        # 添加过滤规则
+        url-pattern: /*
+        # 忽略过滤的格式
+        exclusions: '*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*,/actuator/*'
+
+      # 配置StatFilter
+      filter:
+        stat:
+          log-slow-sql: true
+
+  redis:
+    # Redis数据库索引（默认为0）
+    database: 0
+    # Redis服务器地址
+    host: hadoop03
+    # Redis服务器连接端口
+    port: 6379
+    # Redis 密码
+    password: redis
+    jedis:
+      pool:
+        # 连接池中的最小空闲连接
+        min-idle: 0
+        # 连接池中的最大空闲连接
+        max-idle: 500
+        # 连接池最大连接数（使用负值表示没有限制）
+        max-active: 2000
+        # 连接池最大阻塞等待时间（使用负值表示没有限制）
+        max-wait: 10000
+    # 连接超时时间（毫秒）
+    timeout: 0
