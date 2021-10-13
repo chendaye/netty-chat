@@ -3,7 +3,7 @@ package top.chendaye666.websocket.service.impl;
 import com.alibaba.fastjson.JSONObject;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
-import top.chendaye666.websocket.dao.GroupInfoDao;
+import top.chendaye666.websocket.dao.mock.GroupInfoDao;
 import top.chendaye666.websocket.model.po.GroupInfo;
 import top.chendaye666.websocket.model.vo.ResponseJson;
 import top.chendaye666.websocket.service.ChatService;

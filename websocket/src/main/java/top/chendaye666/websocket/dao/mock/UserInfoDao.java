@@ -1,4 +1,4 @@
-package top.chendaye666.websocket.dao;
+package top.chendaye666.websocket.dao.mock;
 
 import top.chendaye666.websocket.model.po.UserInfo;
 

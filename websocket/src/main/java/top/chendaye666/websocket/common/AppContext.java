@@ -1,7 +1,7 @@
 package top.chendaye666.websocket.common;
 
-import top.chendaye666.websocket.dao.GroupInfoDao;
-import top.chendaye666.websocket.dao.UserInfoDao;
+import top.chendaye666.websocket.dao.mock.GroupInfoDao;
+import top.chendaye666.websocket.dao.mock.UserInfoDao;
 import top.chendaye666.websocket.web.websocket.WebSocketServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -39,8 +39,6 @@
     </environments>
     <mappers>
         <!-- 每一个 mapper 对应一个 dao接口（类/表）        -->
-        <mapper resource="mappers/MyMapper.xml" />
-        <mapper resource="mappers/UserDaoMapper.xml"/>
         <mapper resource="mappers/UserMapper.xml"/>
     </mappers>
 </configuration>

@@ -1,33 +1,59 @@
 package top.chendaye666.websocket.model.po;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class User {
-    private String id;
-    private String userName;
-    private String password;
-    private String name;
-    private Integer age;
-    private Integer sex;
-    private Date birthday;
-    private String created;
-    private String updated;
+    private Integer id;
 
-    public String getId() {
+    private String username;
+
+    private String password;
+
+    private String email;
+
+    private String phone;
+
+    private String question;
+
+    private String answer;
+
+    private Integer role;
+
+    private Date createTime;
+
+    private Date updateTime;
+
+    public User(Integer id, String username, String password, String email, String phone, String question, String answer, Integer role, Date createTime, Date updateTime) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.phone = phone;
+        this.question = question;
+        this.answer = answer;
+        this.role = role;
+        this.createTime = createTime;
+        this.updateTime = updateTime;
+    }
+
+    public User() {
+        super();
+    }
+
+    public Integer getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getUsername() {
+        return username;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setUsername(String username) {
+        this.username = username == null ? null : username.trim();
     }
 
     public String getPassword() {
@@ -35,69 +61,62 @@ public class User {
     }
 
     public void setPassword(String password) {
-        this.password = password;
+        this.password = password == null ? null : password.trim();
     }
 
-    public String getName() {
-        return name;
+    public String getEmail() {
+        return email;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setEmail(String email) {
+        this.email = email == null ? null : email.trim();
     }
 
-    public Integer getAge() {
-        return age;
+    public String getPhone() {
+        return phone;
     }
 
-    public void setAge(Integer age) {
-        this.age = age;
+    public void setPhone(String phone) {
+        this.phone = phone == null ? null : phone.trim();
     }
 
-    public Integer getSex() {
-        return sex;
+    public String getQuestion() {
+        return question;
     }
 
-    public void setSex(Integer sex) {
-        this.sex = sex;
+    public void setQuestion(String question) {
+        this.question = question == null ? null : question.trim();
     }
 
-    public Date getBirthday() {
-        return birthday;
+    public String getAnswer() {
+        return answer;
     }
 
-    public void setBirthday(Date birthday) {
-        this.birthday = birthday;
+    public void setAnswer(String answer) {
+        this.answer = answer == null ? null : answer.trim();
     }
 
-    public String getCreated() {
-        return created;
+    public Integer getRole() {
+        return role;
     }
 
-    public void setCreated(String created) {
-        this.created = created;
+    public void setRole(Integer role) {
+        this.role = role;
     }
 
-    public String getUpdated() {
-        return updated;
+    public Date getCreateTime() {
+        return createTime;
     }
 
-    public void setUpdated(String updated) {
-        this.updated = updated;
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
     }
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "id='" + id + '\'' +
-                ", userName='" + userName + '\'' +
-                ", password='" + password + '\'' +
-                ", name='" + name + '\'' +
-                ", age=" + age +
-                ", sex=" + sex +
-                ", birthday='" + new SimpleDateFormat("yyyy-MM-dd").format(birthday) + '\'' +
-                ", created='" + created + '\'' +
-                ", updated='" + updated + '\'' +
-                '}';
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
     }
 }

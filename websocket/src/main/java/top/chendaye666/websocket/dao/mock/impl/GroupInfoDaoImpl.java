@@ -1,6 +1,6 @@
-package top.chendaye666.websocket.dao.impl;
+package top.chendaye666.websocket.dao.mock.impl;
 
-import top.chendaye666.websocket.dao.GroupInfoDao;
+import top.chendaye666.websocket.dao.mock.GroupInfoDao;
 import top.chendaye666.websocket.model.po.GroupInfo;
 import top.chendaye666.websocket.model.po.UserInfo;
 import top.chendaye666.websocket.util.Constant;
