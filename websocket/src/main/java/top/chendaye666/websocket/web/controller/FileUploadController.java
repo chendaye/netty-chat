@@ -2,10 +2,9 @@ package top.chendaye666.websocket.web.controller;
 
 import org.springframework.web.bind.annotation.RestController;
 import top.chendaye666.websocket.annotation.LoginToken;
-import top.chendaye666.websocket.model.vo.ResponseJson;
+import top.chendaye666.websocket.common.ServerResponse;
 import top.chendaye666.websocket.service.FileUploadService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -25,7 +24,7 @@ public class FileUploadController {
     @RequestMapping(value = "/upload", method = POST)
     @ResponseBody
     @LoginToken // 需要鉴权
-    public ResponseJson upload(
+    public ServerResponse upload(
             @RequestParam(value = "file", required = true) MultipartFile file, HttpServletRequest request) {
         return fileUploadService.upload(file, request);
     }

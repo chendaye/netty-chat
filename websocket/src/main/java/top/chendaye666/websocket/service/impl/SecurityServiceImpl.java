@@ -1,8 +1,8 @@
 package top.chendaye666.websocket.service.impl;
 
+import top.chendaye666.websocket.common.ServerResponse;
 import top.chendaye666.websocket.dao.mock.UserInfoDao;
 import top.chendaye666.websocket.model.po.UserInfo;
-import top.chendaye666.websocket.model.vo.ResponseJson;
 import top.chendaye666.websocket.service.SecurityService;
 import top.chendaye666.websocket.util.Constant;
 import org.slf4j.Logger;
@@ -23,27 +23,27 @@ public class SecurityServiceImpl implements SecurityService{
     
     
     @Override
-    public ResponseJson login(String username, String password, HttpSession session) {
+    public ServerResponse login(String username, String password, HttpSession session) {
         UserInfo userInfo = userInfoDao.getByUsername(username);
         if (userInfo == null) {
-            return new ResponseJson().error("不存在该用户名");
+            return ServerResponse.createByErrorMessage("不存在该用户名");
         }
         if (!userInfo.getPassword().equals(password)) {
-            return new ResponseJson().error("密码不正确");
+            return ServerResponse.createByErrorMessage("密码不正确");
         }
         session.setAttribute(Constant.USER_TOKEN, userInfo.getUserId());
-        return new ResponseJson().success();
+        return ServerResponse.createBySuccess();
     }
 
     @Override
-    public ResponseJson logout(HttpSession session) {
+    public ServerResponse logout(HttpSession session) {
         Object userId = session.getAttribute(Constant.USER_TOKEN);
         if (userId == null) {
-            return new ResponseJson().error("请先登录！");
+            return ServerResponse.createByErrorMessage("请先登录！");
         }
         session.removeAttribute(Constant.USER_TOKEN);
         LOGGER.info(MessageFormat.format("userId为 {0} 的用户已注销登录!", userId));
-        return new ResponseJson().success();
+        return ServerResponse.createBySuccess();
     }
 
 }

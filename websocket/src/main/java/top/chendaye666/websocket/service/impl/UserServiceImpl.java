@@ -84,36 +84,6 @@ public class UserServiceImpl implements IUserService {
         return ServerResponse.createBySuccessMessage("校验成功!");
     }
 
-    /**
-     * 选择找回密码的问题
-     * @param username
-     * @return
-     */
-    public ServerResponse selectQuestion(String username){
-        ServerResponse validResponse = this.checkValid(username, Const.USERNAME);
-        if (!validResponse.isSuccess()) return  ServerResponse.createByErrorMessage("用户不存在");
-        String question = userMapper.selectQuestionByUsername(username);
-        return StringUtils.isNotBlank(question) ? ServerResponse.createBySuccess(question)
-                : ServerResponse.createBySuccessMessage("找回密码的问题为空！");
-    }
-
-    /**
-     * 检查问题
-     * @param username
-     * @param question
-     * @param answer
-     * @return
-     */
-    public ServerResponse<String> checkAnswer(String username,String question,String answer){
-        int resultCount = userMapper.checkAnswer(username,question,answer);
-        if(resultCount>0){
-            //说明问题及问题答案是这个用户的,并且是正确的
-            String forgetToken = UUID.randomUUID().toString();
-//            TokenCache.setKey(TokenCache.TOKEN_PREFIX+username,forgetToken);
-            return ServerResponse.createBySuccess(forgetToken);
-        }
-        return ServerResponse.createByErrorMessage("问题的答案错误");
-    }
 
     /**
      * 修改密码
@@ -188,8 +158,7 @@ public class UserServiceImpl implements IUserService {
         updateUser.setId(user.getId());
         updateUser.setEmail(user.getEmail());
         updateUser.setPhone(user.getPhone());
-        updateUser.setQuestion(user.getQuestion());
-        updateUser.setAnswer(user.getAnswer());
+        updateUser.setAvatar(user.getAvatar());
 
         int updateCount = userMapper.updateByPrimaryKeySelective(updateUser);
         if(updateCount > 0){

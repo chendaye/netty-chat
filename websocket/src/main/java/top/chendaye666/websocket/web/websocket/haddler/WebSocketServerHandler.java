@@ -6,7 +6,7 @@ import io.netty.channel.ChannelHandler.Sharable;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.websocketx.*;
-import top.chendaye666.websocket.model.vo.ResponseJson;
+import top.chendaye666.websocket.common.ServerResponse;
 import top.chendaye666.websocket.service.ChatService;
 import top.chendaye666.websocket.util.Constant;
 import org.slf4j.Logger;
@@ -122,9 +122,7 @@ public class WebSocketServerHandler extends SimpleChannelInboundHandler<WebSocke
     
     
     private void sendErrorMessage(ChannelHandlerContext ctx, String errorMsg) {
-        String responseJson = new ResponseJson()
-                .error(errorMsg)
-                .toString();
+        String responseJson = ServerResponse.createByErrorMessage(errorMsg).toString();
         ctx.channel().writeAndFlush(new TextWebSocketFrame(responseJson));
     }
 

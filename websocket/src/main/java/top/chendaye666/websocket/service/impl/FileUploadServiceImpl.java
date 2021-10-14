@@ -1,6 +1,6 @@
 package top.chendaye666.websocket.service.impl;
 
-import top.chendaye666.websocket.model.vo.ResponseJson;
+import top.chendaye666.websocket.common.ServerResponse;
 import top.chendaye666.websocket.service.FileUploadService;
 import top.chendaye666.websocket.util.FileUtils;
 import org.springframework.stereotype.Service;
@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashMap;
 import java.util.UUID;
 
 @Service
@@ -21,7 +22,7 @@ public class FileUploadServiceImpl implements FileUploadService{
     private final static String FILE_STORE_PATH = "UploadFile";
     
     @Override
-    public ResponseJson upload(MultipartFile file, HttpServletRequest request) {
+    public ServerResponse upload(MultipartFile file, HttpServletRequest request) {
         // 重命名文件，防止重名
         String filename = getRandomUUID();
         String suffix = "";
@@ -43,12 +44,14 @@ public class FileUploadServiceImpl implements FileUploadService{
             Files.copy(file.getInputStream(), filePath);
         } catch (IOException e) {
             e.printStackTrace();
-            return new ResponseJson().error("文件上传发生错误！");
+            return ServerResponse.createByErrorMessage("文件上传发生错误！");
         }
-        return new ResponseJson().success()
-                .setData("originalFilename", originalFilename)
-                .setData("fileSize", fileSize)
-                .setData("fileUrl", SERVER_URL_PREFIX + FILE_STORE_PATH + "\\" + filename);
+
+        HashMap<String, String> data = new HashMap<>();
+        data.put("originalFilename", originalFilename);
+        data.put("fileSize", fileSize);
+        data.put("fileUrl", SERVER_URL_PREFIX + FILE_STORE_PATH + "\\" + filename);
+        return ServerResponse.createBySuccess(data);
     }
 
     private String getRandomUUID() {

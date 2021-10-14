@@ -3,9 +3,9 @@ package top.chendaye666.websocket.service.impl;
 import com.alibaba.fastjson.JSONObject;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
+import top.chendaye666.websocket.common.ServerResponse;
 import top.chendaye666.websocket.dao.mock.GroupInfoDao;
 import top.chendaye666.websocket.model.po.GroupInfo;
-import top.chendaye666.websocket.model.vo.ResponseJson;
 import top.chendaye666.websocket.service.ChatService;
 import top.chendaye666.websocket.util.ChatType;
 import top.chendaye666.websocket.util.Constant;
@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.text.MessageFormat;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map.Entry;
 
@@ -36,9 +37,9 @@ public class ChatServiceImpl implements ChatService{
         String userId = (String)param.get("userId");
         //todo: 注册 <user,channel>
         Constant.onlineUserMap.put(userId, ctx);
-        String responseJson = new ResponseJson().success()
-                .setData("type", ChatType.REGISTER)
-                .toString();
+        HashMap<String, ChatType> data = new HashMap<>();
+        data.put("type", ChatType.REGISTER);
+        String responseJson = ServerResponse.createBySuccess(data).toString();
         sendMessage(ctx, responseJson);
         LOGGER.info(MessageFormat.format("userId为 {0} 的用户登记到在线用户表，当前在线人数为：{1}"
                 , userId, Constant.onlineUserMap.size()));
@@ -57,16 +58,15 @@ public class ChatServiceImpl implements ChatService{
         String content = (String)param.get("content");
         ChannelHandlerContext toUserCtx = Constant.onlineUserMap.get(toUserId);
         if (toUserCtx == null) {
-            String responseJson = new ResponseJson()
-                    .error(MessageFormat.format("userId为 {0} 的用户没有登录！", toUserId))
-                    .toString();
+            String responseJson = ServerResponse.createByErrorMessage(MessageFormat.format("userId为 {0} 的用户没有登录！", toUserId)).toString();
             sendMessage(ctx, responseJson);
         } else {
-            String responseJson = new ResponseJson().success()
-                    .setData("fromUserId", fromUserId)
-                    .setData("content", content)
-                    .setData("type", ChatType.SINGLE_SENDING)
-                    .toString();
+            HashMap<String, String> data = new HashMap<>();
+            data.put("fromUserId", fromUserId);
+            data.put("content", content);
+            data.put("content", content);
+            data.put("type", ChatType.SINGLE_SENDING.toString());
+            String responseJson = ServerResponse.createBySuccess(data).toString();
             sendMessage(toUserCtx, responseJson);
         }
     }
@@ -85,15 +85,15 @@ public class ChatServiceImpl implements ChatService{
 
         GroupInfo groupInfo = groupDao.getByGroupId(toGroupId);
         if (groupInfo == null) {
-            String responseJson = new ResponseJson().error("该群id不存在").toString();
+            String responseJson = ServerResponse.createByErrorMessage("该群id不存在").toString();
             sendMessage(ctx, responseJson);
         } else {
-            String responseJson = new ResponseJson().success()
-                    .setData("fromUserId", fromUserId)
-                    .setData("content", content)
-                    .setData("toGroupId", toGroupId)
-                    .setData("type", ChatType.GROUP_SENDING)
-                    .toString();
+            HashMap<String, String> data = new HashMap<>();
+            data.put("fromUserId", fromUserId);
+            data.put("content", content);
+            data.put("toGroupId", toGroupId);
+            data.put("type", ChatType.GROUP_SENDING.toString());
+            String responseJson = ServerResponse.createBySuccess(data).toString();
             groupInfo.getMembers().stream()
                 .forEach(member -> { 
                     ChannelHandlerContext toCtx = Constant.onlineUserMap.get(member.getUserId());
@@ -141,18 +141,16 @@ public class ChatServiceImpl implements ChatService{
         String fileUrl = (String)param.get("fileUrl");
         ChannelHandlerContext toUserCtx = Constant.onlineUserMap.get(toUserId);
         if (toUserCtx == null) {
-            String responseJson = new ResponseJson()
-                    .error(MessageFormat.format("userId为 {0} 的用户没有登录！", toUserId))
-                    .toString();
+            String responseJson = ServerResponse.createByErrorMessage(MessageFormat.format("userId为 {0} 的用户没有登录！", toUserId)).toString();
             sendMessage(ctx, responseJson);
         } else {
-            String responseJson = new ResponseJson().success()
-                    .setData("fromUserId", fromUserId)
-                    .setData("originalFilename", originalFilename)
-                    .setData("fileSize", fileSize)
-                    .setData("fileUrl", fileUrl)
-                    .setData("type", ChatType.FILE_MSG_SINGLE_SENDING)
-                    .toString();
+            HashMap<String, String> data = new HashMap<>();
+            data.put("fromUserId", fromUserId);
+            data.put("originalFilename", originalFilename);
+            data.put("fileSize", fileSize);
+            data.put("fileUrl", fileUrl);
+            data.put("type", ChatType.FILE_MSG_SINGLE_SENDING.toString());
+            String responseJson = ServerResponse.createBySuccess(data).toString();
             sendMessage(toUserCtx, responseJson);
         }
     }
@@ -171,17 +169,17 @@ public class ChatServiceImpl implements ChatService{
         String fileUrl = (String)param.get("fileUrl");
         GroupInfo groupInfo = groupDao.getByGroupId(toGroupId);
         if (groupInfo == null) {
-            String responseJson = new ResponseJson().error("该群id不存在").toString();
+            String responseJson  = ServerResponse.createByErrorMessage("该群id不存在").toString();
             sendMessage(ctx, responseJson);
         } else {
-            String responseJson = new ResponseJson().success()
-                    .setData("fromUserId", fromUserId)
-                    .setData("toGroupId", toGroupId)
-                    .setData("originalFilename", originalFilename)
-                    .setData("fileSize", fileSize)
-                    .setData("fileUrl", fileUrl)
-                    .setData("type", ChatType.FILE_MSG_GROUP_SENDING)
-                    .toString();
+            HashMap<String, String> data = new HashMap<>();
+            data.put("fromUserId", fromUserId);
+            data.put("toGroupId", toGroupId);
+            data.put("originalFilename", originalFilename);
+            data.put("fileSize", fileSize);
+            data.put("fileUrl", fileUrl);
+            data.put("type", ChatType.FILE_MSG_GROUP_SENDING.toString());
+            String responseJson = ServerResponse.createBySuccess(data).toString();
             groupInfo.getMembers().stream()
                 .forEach(member -> {
                     //todo: 把消息发送给谁
@@ -199,9 +197,7 @@ public class ChatServiceImpl implements ChatService{
      */
     @Override
     public void typeError(ChannelHandlerContext ctx) {
-        String responseJson = new ResponseJson()
-                .error("该类型不存在！")
-                .toString();
+        String responseJson = ServerResponse.createByErrorMessage("该类型不存在！").toString();
         sendMessage(ctx, responseJson);
     }
 

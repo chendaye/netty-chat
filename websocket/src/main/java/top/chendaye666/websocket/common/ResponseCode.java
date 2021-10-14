@@ -1,5 +1,9 @@
 package top.chendaye666.websocket.common;
 
+import com.alibaba.fastjson.JSONObject;
+
+import java.util.HashMap;
+
 public enum ResponseCode {
     SUCCESS(0, "SUCCESS"),
     ERROR(1, "ERROR"),
@@ -23,6 +27,11 @@ public enum ResponseCode {
     }
 
 
-
+    @Override
+    public String toString() {
+        HashMap<Integer, String> data = new HashMap<>();
+        data.put(this.code, this.desc);
+        return JSONObject.toJSONString(data);
+    }
 
 }

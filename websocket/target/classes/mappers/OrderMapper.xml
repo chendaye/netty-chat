@@ -1,5 +1,0 @@
-<mapper namespace="mybatis.dao.OrderMapper">
-    <select id="queryOrderUserByOrderNumber" resultType="mybatis.pojo.OrderUser">
-        select * from tb_order o left join tb_user u on o.user_id=u.id where o.order_number = #{number}
-    </select>
-</mapper>

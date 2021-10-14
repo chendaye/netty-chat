@@ -8,15 +8,14 @@
       <arg column="password" jdbcType="VARCHAR" javaType="java.lang.String" />
       <arg column="email" jdbcType="VARCHAR" javaType="java.lang.String" />
       <arg column="phone" jdbcType="VARCHAR" javaType="java.lang.String" />
-      <arg column="question" jdbcType="VARCHAR" javaType="java.lang.String" />
-      <arg column="answer" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="avatar" jdbcType="VARCHAR" javaType="java.lang.String" />
       <arg column="role" jdbcType="INTEGER" javaType="java.lang.Integer" />
       <arg column="create_time" jdbcType="TIMESTAMP" javaType="java.util.Date" />
       <arg column="update_time" jdbcType="TIMESTAMP" javaType="java.util.Date" />
     </constructor>
   </resultMap>
   <sql id="Base_Column_List" >
-    id, username, password, email, phone, question, answer, role, create_time, update_time
+    id, username, password, email, phone, avatar, role, create_time, update_time
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -25,21 +24,21 @@
     where id = #{id,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
-    delete from netty_user
+    delete from user
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="top.chendaye666.websocket.model.po.User" >
-    insert into netty_user (id, username, password, 
-      email, phone, question, 
-      answer, role, create_time, 
+    insert into user (id, username, password, 
+      email, phone, avatar, 
+      role, create_time, 
       update_time)
     values (#{id,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
-      #{email,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{question,jdbcType=VARCHAR}, 
+      #{email,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{avatar}, 
       #{answer,jdbcType=VARCHAR}, #{role,jdbcType=INTEGER}, now(),
       now())
   </insert>
   <insert id="insertSelective" parameterType="top.chendaye666.websocket.model.po.User" >
-    insert into netty_user
+    insert into user
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
         id,
@@ -56,11 +55,8 @@
       <if test="phone != null" >
         phone,
       </if>
-      <if test="question != null" >
-        question,
-      </if>
-      <if test="answer != null" >
-        answer,
+      <if test="avatar != null" >
+        avatar,
       </if>
       <if test="role != null" >
         role,
@@ -88,12 +84,10 @@
       <if test="phone != null" >
         #{phone,jdbcType=VARCHAR},
       </if>
-      <if test="question != null" >
-        #{question,jdbcType=VARCHAR},
+      <if test="avatar != null" >
+        #{avatar,jdbcType=VARCHAR},
       </if>
-      <if test="answer != null" >
-        #{answer,jdbcType=VARCHAR},
-      </if>
+     
       <if test="role != null" >
         #{role,jdbcType=INTEGER},
       </if>
@@ -106,7 +100,7 @@
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="top.chendaye666.websocket.model.po.User" >
-    update netty_user
+    update user
     <set >
       <if test="username != null" >
         username = #{username,jdbcType=VARCHAR},
@@ -120,11 +114,8 @@
       <if test="phone != null" >
         phone = #{phone,jdbcType=VARCHAR},
       </if>
-      <if test="question != null" >
-        question = #{question,jdbcType=VARCHAR},
-      </if>
-      <if test="answer != null" >
-        answer = #{answer,jdbcType=VARCHAR},
+      <if test="avatar != null" >
+        avatar = #{avatar,jdbcType=VARCHAR},
       </if>
       <if test="role != null" >
         role = #{role,jdbcType=INTEGER},
@@ -139,13 +130,12 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="top.chendaye666.websocket.model.po.User" >
-    update netty_user
+    update user
     set username = #{username,jdbcType=VARCHAR},
       password = #{password,jdbcType=VARCHAR},
       email = #{email,jdbcType=VARCHAR},
       phone = #{phone,jdbcType=VARCHAR},
-      question = #{question,jdbcType=VARCHAR},
-      answer = #{answer,jdbcType=VARCHAR},
+      avatar = #{avatar,jdbcType=VARCHAR},
       role = #{role,jdbcType=INTEGER},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = now()
@@ -154,12 +144,12 @@
   
   
   <select id="checkUsername" resultType="int" parameterType="string" >
-    select count(1) from netty_user
+    select count(1) from user
     where username = #{username}
   </select>
 
   <select id="checkEmail" resultType="int" parameterType="string" >
-    select count(1) from netty_user
+    select count(1) from user
     where email = #{email}
   </select>
 
@@ -167,30 +157,13 @@
   <select id="selectLogin" resultMap="BaseResultMap" parameterType="map">
     SELECT
     <include refid="Base_Column_List" />
-    from netty_user
+    from user
     where username = #{username}
     and password = #{password}
   </select>
 
-
-  <select id="selectQuestionByUsername" resultType="string" parameterType="string">
-    select
-    question
-    from netty_user
-    where username = #{username}
-  </select>
-
-  <select id="checkAnswer" resultType="int" parameterType="map">
-    SELECT
-    count(1)
-    from netty_user
-    where username=#{username}
-    and question = #{question}
-    and answer = #{answer}
-  </select>
-
   <update id="updatePasswordByUsername" parameterType="map">
-    update netty_user
+    update user
     SET password = #{passwordNew},update_time = now()
     where username = #{username}
   </update>
@@ -198,14 +171,14 @@
   <select id="checkPassword" resultType="int" parameterType="map">
     SELECT
     count(1)
-    from netty_user
+    from user
     where password = #{password}
     and id = #{userId}
   </select>
 
 
   <select id="checkEmailByUserId" resultType="int" parameterType="map">
-    select count(1) from netty_user
+    select count(1) from user
     where email = #{email}
     and id != #{userId}
   </select>

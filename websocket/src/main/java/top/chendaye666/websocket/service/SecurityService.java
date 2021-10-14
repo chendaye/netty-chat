@@ -1,6 +1,7 @@
 package top.chendaye666.websocket.service;
 
-import top.chendaye666.websocket.model.vo.ResponseJson;
+
+import top.chendaye666.websocket.common.ServerResponse;
 
 import javax.servlet.http.HttpSession;
 
@@ -9,7 +10,7 @@ import javax.servlet.http.HttpSession;
  */
 public interface SecurityService {
 
-    ResponseJson login(String username, String password, HttpSession session);
-    
-    ResponseJson logout(HttpSession session);
+    ServerResponse login(String username, String password, HttpSession session);
+
+    ServerResponse logout(HttpSession session);
 }

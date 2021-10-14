@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
-import top.chendaye666.websocket.model.vo.ResultResponse;
+import top.chendaye666.websocket.common.ServerResponse;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -25,9 +25,9 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(value = BizException.class)
     @ResponseBody
-    public ResultResponse bizExceptionHandler(HttpServletRequest req, BizException e){
+    public ServerResponse bizExceptionHandler(HttpServletRequest req, BizException e){
         logger.error("发生业务异常！原因是：{}",e.getErrorMsg());
-        return ResultResponse.error(e.getErrorCode(),e.getErrorMsg());
+        return ServerResponse.createByErrorCodeMessage(Integer.parseInt(e.getErrorCode()),e.getErrorMsg());
     }
 
     /**
@@ -38,9 +38,9 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(value =NullPointerException.class)
     @ResponseBody
-    public ResultResponse exceptionHandler(HttpServletRequest req, NullPointerException e){
+    public ServerResponse exceptionHandler(HttpServletRequest req, NullPointerException e){
         logger.error("发生空指针异常！原因是:",e);
-        return ResultResponse.error(ExceptionEnum.BODY_NOT_MATCH);
+        return ServerResponse.createByErrorMessage(ExceptionEnum.BODY_NOT_MATCH.toString());
     }
 
     /**
@@ -51,8 +51,8 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(value =Exception.class)
     @ResponseBody
-    public ResultResponse exceptionHandler(HttpServletRequest req, Exception e){
+    public ServerResponse exceptionHandler(HttpServletRequest req, Exception e){
         logger.error("未知异常！原因是:",e);
-        return ResultResponse.error(ExceptionEnum.INTERNAL_SERVER_ERROR);
+        return ServerResponse.createByErrorMessage(ExceptionEnum.INTERNAL_SERVER_ERROR.toString());
     }
 }
