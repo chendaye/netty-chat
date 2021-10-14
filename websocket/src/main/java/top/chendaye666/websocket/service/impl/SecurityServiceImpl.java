@@ -1,7 +1,7 @@
 package top.chendaye666.websocket.service.impl;
 
 import top.chendaye666.websocket.common.ServerResponse;
-import top.chendaye666.websocket.dao.mock.UserInfoDao;
+import top.chendaye666.websocket.mock.UserInfoDao;
 import top.chendaye666.websocket.model.po.UserInfo;
 import top.chendaye666.websocket.service.SecurityService;
 import top.chendaye666.websocket.util.Constant;

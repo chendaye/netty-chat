@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import top.chendaye666.websocket.common.ServerResponse;
-import top.chendaye666.websocket.dao.mock.GroupInfoDao;
+import top.chendaye666.websocket.mock.GroupInfoDao;
 import top.chendaye666.websocket.model.po.GroupInfo;
 import top.chendaye666.websocket.service.ChatService;
 import top.chendaye666.websocket.util.ChatType;

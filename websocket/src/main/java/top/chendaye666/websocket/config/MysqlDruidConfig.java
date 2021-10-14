@@ -7,7 +7,6 @@ import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -20,14 +19,16 @@ import java.sql.SQLException;
 
 /**
  * Druid官方已提供启动器了，我们只要使用启动器，就能实现springboot的自动装配，就不需要再通过配置类去注入我们的bean了。
+ * 注解代替xml
+ * springboot 注解方式整合 mybatis
  */
 @Configuration
 @MapperScan(basePackages = MysqlDruidConfig.PACKAGE, sqlSessionFactoryRef = "mysqlSqlSessionFactory")
 public class MysqlDruidConfig {
     // 精确到 dao 目录，以便跟其他数据源隔离
     static final String PACKAGE = "top.chendaye666.websocket.dao";
-    static final String MAPPER_LOCATION = "classpath:mapper/*.xml";
-    static final String CONFIG_LOCATION = "classpath:config/mybatis-config.xml";
+    static final String MAPPER_LOCATION = "classpath:mappers/*.xml";
+    static final String CONFIG_LOCATION = "classpath:mybatis-config.xml";
 
     @Value("${spring.datasource.druid.url}")
     private String url;
@@ -105,6 +106,8 @@ public class MysqlDruidConfig {
         ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
         try {
             sessionFactory.setConfigLocation(resolver.getResource(MysqlDruidConfig.CONFIG_LOCATION));
+            // Springboot整合mybatis，配置驼峰命名转换
+            sessionFactory.getObject().getConfiguration().setMapUnderscoreToCamelCase(true);
             return sessionFactory.getObject();
         } catch (Exception e) {
             throw new RuntimeException(e);

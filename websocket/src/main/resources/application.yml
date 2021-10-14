@@ -1,12 +1,14 @@
 server:
   port: 7777
 
+
 # https://segmentfault.com/a/1190000039005979
 spring:
   datasource:
     druid:
-      driverClassName: com.mysql.jdbc.Driver
-      url: jdbc:mysql://hadoop01:3306/netty?autoReconnect=true&useUnicode=true&characterEncoding=utf8
+#      driverClassName: com.mysql.jdbc.Driver
+      driverClassName: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://hadoop01:3306/netty?autoReconnect=true&useUnicode=true&characterEncoding=utf8&useSSL=false
       username: root
       password: root
 
@@ -44,3 +46,7 @@ spring:
         max-wait: 10000
     # 连接超时时间（毫秒）
     timeout: 0
+
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true

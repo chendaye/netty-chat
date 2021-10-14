@@ -1,6 +1,5 @@
 package top.chendaye666.websocket.model.po;
 
-import java.util.Date;
 
 public class User {
     private Integer id;
@@ -17,14 +16,14 @@ public class User {
 
     private Integer role;
 
-    private Date createTime;
+    private String createTime;
 
-    private Date updateTime;
+    private String updateTime;
 
     public User() {
     }
 
-    public User(Integer id, String username, String password, String email, String phone, String avatar, Integer role, Date createTime, Date updateTime) {
+    public User(Integer id, String username, String password, String email, String phone, String avatar, Integer role, String createTime, String updateTime) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -92,19 +91,34 @@ public class User {
         this.role = role;
     }
 
-    public Date getCreateTime() {
+    public String getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(Date createTime) {
+    public void setCreateTime(String createTime) {
         this.createTime = createTime;
     }
 
-    public Date getUpdateTime() {
+    public String getUpdateTime() {
         return updateTime;
     }
 
-    public void setUpdateTime(Date updateTime) {
+    public void setUpdateTime(String updateTime) {
         this.updateTime = updateTime;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", email='" + email + '\'' +
+                ", phone='" + phone + '\'' +
+                ", avatar='" + avatar + '\'' +
+                ", role=" + role +
+                ", createTime='" + createTime + '\'' +
+                ", updateTime='" + updateTime + '\'' +
+                '}';
     }
 }

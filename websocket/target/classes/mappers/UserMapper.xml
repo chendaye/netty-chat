@@ -10,33 +10,25 @@
       <arg column="phone" jdbcType="VARCHAR" javaType="java.lang.String" />
       <arg column="avatar" jdbcType="VARCHAR" javaType="java.lang.String" />
       <arg column="role" jdbcType="INTEGER" javaType="java.lang.Integer" />
-      <arg column="create_time" jdbcType="TIMESTAMP" javaType="java.util.Date" />
-      <arg column="update_time" jdbcType="TIMESTAMP" javaType="java.util.Date" />
+      <arg column="create_time" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="update_time" jdbcType="VARCHAR" javaType="java.lang.String" />
     </constructor>
   </resultMap>
   <sql id="Base_Column_List" >
     id, username, password, email, phone, avatar, role, create_time, update_time
   </sql>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
-    select 
-    <include refid="Base_Column_List" />
-    from user
-    where id = #{id,jdbcType=INTEGER}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
-    delete from user
-    where id = #{id,jdbcType=INTEGER}
-  </delete>
-  <insert id="insert" parameterType="top.chendaye666.websocket.model.po.User" >
+
+  <insert id="insert"  useGeneratedKeys="true" keyColumn="id" keyProperty="id" parameterType="top.chendaye666.websocket.model.po.User" >
     insert into user (id, username, password, 
       email, phone, avatar, 
       role, create_time, 
       update_time)
     values (#{id,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
-      #{email,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{avatar}, 
-      #{answer,jdbcType=VARCHAR}, #{role,jdbcType=INTEGER}, now(),
-      now())
+      #{email,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR},
+      #{avatar,jdbcType=VARCHAR}, #{role,jdbcType=INTEGER}, #{createTime,jdbcType=VARCHAR},
+            #{updateTime,jdbcType=VARCHAR})
   </insert>
+
   <insert id="insertSelective" parameterType="top.chendaye666.websocket.model.po.User" >
     insert into user
     <trim prefix="(" suffix=")" suffixOverrides="," >
@@ -87,7 +79,7 @@
       <if test="avatar != null" >
         #{avatar,jdbcType=VARCHAR},
       </if>
-     
+
       <if test="role != null" >
         #{role,jdbcType=INTEGER},
       </if>
@@ -99,6 +91,12 @@
       </if>
     </trim>
   </insert>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from user
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+
   <update id="updateByPrimaryKeySelective" parameterType="top.chendaye666.websocket.model.po.User" >
     update user
     <set >
@@ -121,10 +119,10 @@
         role = #{role,jdbcType=INTEGER},
       </if>
       <if test="createTime != null" >
-        create_time = #{createTime,jdbcType=TIMESTAMP},
+        create_time = #{createTime,jdbcType=VARCHAR},
       </if>
       <if test="updateTime != null" >
-        update_time = now(),
+        update_time = #{updateTime,jdbcType=VARCHAR},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
@@ -137,23 +135,31 @@
       phone = #{phone,jdbcType=VARCHAR},
       avatar = #{avatar,jdbcType=VARCHAR},
       role = #{role,jdbcType=INTEGER},
-      create_time = #{createTime,jdbcType=TIMESTAMP},
-      update_time = now()
+      create_time = #{createTime,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
-  
-  
+  <update id="updatePasswordByUsername" parameterType="map">
+    update user
+    SET password = #{passwordNew},update_time = #{updateTime,jdbcType=VARCHAR}
+    where username = #{username}
+  </update>
+
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    from user
+    where id = #{id,jdbcType=INTEGER}
+  </select>
   <select id="checkUsername" resultType="int" parameterType="string" >
     select count(1) from user
     where username = #{username}
   </select>
-
   <select id="checkEmail" resultType="int" parameterType="string" >
     select count(1) from user
     where email = #{email}
   </select>
-
-
   <select id="selectLogin" resultMap="BaseResultMap" parameterType="map">
     SELECT
     <include refid="Base_Column_List" />
@@ -161,13 +167,6 @@
     where username = #{username}
     and password = #{password}
   </select>
-
-  <update id="updatePasswordByUsername" parameterType="map">
-    update user
-    SET password = #{passwordNew},update_time = now()
-    where username = #{username}
-  </update>
-
   <select id="checkPassword" resultType="int" parameterType="map">
     SELECT
     count(1)
@@ -175,12 +174,22 @@
     where password = #{password}
     and id = #{userId}
   </select>
-
-
   <select id="checkEmailByUserId" resultType="int" parameterType="map">
     select count(1) from user
     where email = #{email}
     and id != #{userId}
   </select>
 
+
+  <select id="getTrdClendar" resultType="top.chendaye666.websocket.model.po.User">
+	  <![CDATA[
+    SELECT
+      *
+    FROM
+      user
+    WHERE id=1
+    ORDER BY id DESC
+      LIMIT 3
+    ]]>
+  </select>
 </mapper>
