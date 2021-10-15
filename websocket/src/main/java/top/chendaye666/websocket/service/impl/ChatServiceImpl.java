@@ -29,6 +29,7 @@ public class ChatServiceImpl implements ChatService{
 
     /**
      * 上线注册
+     * {"content":"content","type":"REGISTER","status":200,"userId":"001"}
      * @param param
      * @param ctx
      */
