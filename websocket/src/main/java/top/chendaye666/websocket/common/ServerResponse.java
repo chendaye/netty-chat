@@ -1,8 +1,9 @@
 package top.chendaye666.websocket.common;
 
 import com.alibaba.fastjson.JSONObject;
-import org.codehaus.jackson.annotate.JsonIgnore;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
 
 import java.io.Serializable;
 

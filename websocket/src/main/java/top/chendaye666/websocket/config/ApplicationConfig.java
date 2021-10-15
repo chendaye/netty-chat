@@ -46,12 +46,16 @@ public class ApplicationConfig implements WebMvcConfigurer {
         return new ServerBootstrap();
     }
 
-    // 配置拦截器
+    /**
+     * 配置拦截器
+     * @param registry
+     */
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(authenticationInterceptor())
                 .addPathPatterns("/**");
     }
+
     @Bean
     public AuthenticationInterceptor authenticationInterceptor() {
         return new AuthenticationInterceptor();

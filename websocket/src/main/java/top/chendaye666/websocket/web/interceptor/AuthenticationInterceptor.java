@@ -8,6 +8,7 @@ import org.springframework.web.servlet.ModelAndView;
 import top.chendaye666.websocket.Exception.BizException;
 import top.chendaye666.websocket.annotation.LoginToken;
 import top.chendaye666.websocket.annotation.PassToken;
+import top.chendaye666.websocket.common.ServerResponse;
 import top.chendaye666.websocket.util.JWTUtil;
 
 import javax.servlet.http.HttpServletRequest;
@@ -30,6 +31,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
         }
         HandlerMethod handlerMethod = (HandlerMethod) object;
         Method method = handlerMethod.getMethod();
+        System.out.println(method.getName());
         //检查是否有passtoken注释，有则跳过认证
         if (method.isAnnotationPresent(PassToken.class)) {
             PassToken passToken = method.getAnnotation(PassToken.class);
@@ -59,6 +61,8 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
                 }
             }
         }
+        if (true) throw new BizException("9999","end");
+
         return true;
     }
 

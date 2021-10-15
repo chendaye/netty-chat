@@ -16,8 +16,57 @@ import java.util.UUID;
 
 @Service("iUserService") // 注册为服务
 public class UserServiceImpl implements IUserService {
-    @Autowired
+    @Autowired(required = false)
     private UserMapper userMapper;
+
+    /**
+     * 检查username email是否存在
+     * @param str
+     * @param type
+     * @return
+     */
+    public ServerResponse<String> checkValid(String str, String type){
+        if (StringUtils.isNotBlank(type)){
+            // 验证用户名是否存在
+            if (Const.USERNAME.equals(type)){
+                int resultCount = userMapper.checkUsername(str);
+                if (resultCount > 0){
+                    return ServerResponse.createByErrorMessage("用户名已经存在！");
+                }
+            }
+            // 验证邮箱是否存在
+            if (Const.EMAIL.equals(type)){
+                int resultCount = userMapper.checkEmail(str);
+                if (resultCount > 0){
+                    return ServerResponse.createByErrorMessage("email已经存在！");
+                }
+            }
+        }else {
+            return ServerResponse.createByErrorMessage("参数错误！");
+        }
+        return ServerResponse.createBySuccessMessage("校验成功!");
+    }
+
+
+    /**
+     * 用户注册
+     * @param user
+     * @return
+     */
+    public ServerResponse<String> register(User user){
+        ServerResponse vaildResponse = this.checkValid(user.getUsername(), Const.USERNAME);
+        if (!vaildResponse.isSuccess()) return vaildResponse;
+        vaildResponse = this.checkValid(user.getEmail(), Const.EMAIL);
+        if (!vaildResponse.isSuccess()) return vaildResponse;
+
+        // MD5加密
+        user.setPassword(MD5Util.MD5EncodeUtf8(user.getPassword()));
+        int resultCount = userMapper.insert(user);
+        if (resultCount == 0){
+            return ServerResponse.createByErrorMessage("注册失败！");
+        }
+        return ServerResponse.createBySuccessMessage("注册成功！");
+    }
 
     /**
      * 登录
@@ -43,46 +92,6 @@ public class UserServiceImpl implements IUserService {
         return ServerResponse.createBySuccess("登录成功！", user);
     }
 
-    public ServerResponse<String> register(User user){
-        ServerResponse vaildResponse = this.checkValid(user.getUsername(), Const.USERNAME);
-        if (!vaildResponse.isSuccess()) return vaildResponse;
-        vaildResponse = this.checkValid(user.getEmail(), Const.EMAIL);
-        if (!vaildResponse.isSuccess()) return vaildResponse;
-
-        // MD5加密
-        user.setPassword(MD5Util.MD5EncodeUtf8(user.getPassword()));
-        int resultCount = userMapper.insert(user);
-        if (resultCount == 0){
-            return ServerResponse.createByErrorMessage("注册失败！");
-        }
-        return ServerResponse.createBySuccessMessage("注册成功！");
-    }
-
-    /**
-     * 检查username email是否存在
-     * @param str
-     * @param type
-     * @return
-     */
-    public ServerResponse<String> checkValid(String str, String type){
-        if (StringUtils.isNotBlank(type)){
-            if (Const.USERNAME.equals(type)){
-                int resultCount = userMapper.checkUsername(str);
-                if (resultCount > 0){
-                    return ServerResponse.createByErrorMessage("用户名已经存在！");
-                }
-            }
-            if (Const.EMAIL.equals(type)){
-                int resultCount = userMapper.checkEmail(str);
-                if (resultCount > 0){
-                    return ServerResponse.createByErrorMessage("email已经存在！");
-                }
-            }
-        }else {
-            return ServerResponse.createByErrorMessage("参数错误！");
-        }
-        return ServerResponse.createBySuccessMessage("校验成功!");
-    }
 
 
     /**

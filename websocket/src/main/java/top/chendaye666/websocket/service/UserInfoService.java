@@ -8,5 +8,5 @@ import top.chendaye666.websocket.common.ServerResponse;
  */
 public interface UserInfoService {
 
-    ServerResponse getByUserId(String userId);
+    ServerResponse<String> getByUserId(String userId);
 }
