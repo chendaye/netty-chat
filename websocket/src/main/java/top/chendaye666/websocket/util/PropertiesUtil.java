@@ -19,7 +19,7 @@ public class PropertiesUtil {
     private static Properties props;
 
     static {
-        String fileName = "mall.properties";
+        String fileName = "netty.properties";
         props = new Properties();
         try{
             props.load(new InputStreamReader(PropertiesUtil.class.getClassLoader().getResourceAsStream(fileName), "UTF-8"));

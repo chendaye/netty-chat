@@ -24,7 +24,7 @@ public interface UserMapper {
 
     User selectLogin(@Param("username") String username, @Param("password") String password);
 
-    int updatePasswordByUsername(@Param("username") String username, @Param("passwordNew") String passwordNew);
+    int updatePasswordByUsername(@Param("username") String username, @Param("passwordNew") String passwordNew, @Param("updateTime") String updateTime);
 
     int checkPassword(@Param(value = "password") String password, @Param("userId") Integer userId);
 

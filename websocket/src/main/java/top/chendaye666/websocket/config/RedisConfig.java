@@ -20,6 +20,7 @@ import org.springframework.data.redis.core.ListOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
+import org.springframework.data.redis.serializer.JdkSerializationRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
@@ -126,6 +127,24 @@ public class RedisConfig{
     }
 
     /**
+     * 操作 String -> Object
+     * @param redisConnectionFactory
+     * @return
+     */
+    @Bean
+    @ConditionalOnMissingBean(name = "stringObjectRedisTemplate")
+    public RedisTemplate<String, Object> stringObjectRedisTemplate(RedisConnectionFactory redisConnectionFactory){
+        RedisTemplate<String, Object> template = new RedisTemplate<>();
+        // value 使用fastJson的序列化方式
+        template.setValueSerializer(new FastJsonRedisSerializer<>(Object.class));
+        // key 使用 StringRedisSerializer 序列化
+        template.setKeySerializer(new StringRedisSerializer());
+        template.setHashKeySerializer(new StringRedisSerializer());
+        template.setConnectionFactory(redisConnectionFactory);
+        return template;
+    }
+
+    /**
      * 操作 List对象
      * @param redisTemplate
      * @return
@@ -142,6 +161,16 @@ public class RedisConfig{
     @Bean
     public ValueOperations<String, String> valueOperations(StringRedisTemplate stringRedisTemplate){
         return stringRedisTemplate.opsForValue();
+    }
+
+    /**
+     * 操作 String -> Object
+     * @param stringObjectRedisTemplate
+     * @return
+     */
+    @Bean
+    public ValueOperations<String, Object> valueObjectOperations(RedisTemplate<String, Object> stringObjectRedisTemplate){
+        return stringObjectRedisTemplate.opsForValue();
     }
 
     /**

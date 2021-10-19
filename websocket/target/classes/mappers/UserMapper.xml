@@ -18,6 +18,7 @@
     id, username, password, email, phone, avatar, role, create_time, update_time
   </sql>
 
+  <!--插入新用户-->
   <insert id="insert"  useGeneratedKeys="true" keyColumn="id" keyProperty="id" parameterType="top.chendaye666.websocket.model.po.User" >
     insert into user (id, username, password, 
       email, phone, avatar, 
@@ -28,6 +29,59 @@
       #{avatar,jdbcType=VARCHAR}, #{role,jdbcType=INTEGER}, #{createTime,jdbcType=VARCHAR},
             #{updateTime,jdbcType=VARCHAR})
   </insert>
+
+  <!--根据主键查找-->
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    from user
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <!--根据用户名修改密码-->
+  <update id="updatePasswordByUsername" parameterType="map">
+    update user
+    SET password = #{passwordNew},update_time = #{updateTime,jdbcType=VARCHAR}
+    where username = #{username}
+  </update>
+  <!--检查密码是否匹配-->
+  <select id="checkPassword" resultType="int" parameterType="map">
+    SELECT
+      count(1)
+    from user
+    where password = #{password}
+      and id = #{userId}
+  </select>
+
+  <update id="updateByPrimaryKeySelective" parameterType="top.chendaye666.websocket.model.po.User" >
+    update user
+    <set >
+      <if test="username != null" >
+        username = #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        phone = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="avatar != null" >
+        avatar = #{avatar,jdbcType=VARCHAR},
+      </if>
+      <if test="role != null" >
+        role = #{role,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
 
   <insert id="insertSelective" parameterType="top.chendaye666.websocket.model.po.User" >
     insert into user
@@ -96,37 +150,7 @@
     delete from user
     where id = #{id,jdbcType=INTEGER}
   </delete>
-
-  <update id="updateByPrimaryKeySelective" parameterType="top.chendaye666.websocket.model.po.User" >
-    update user
-    <set >
-      <if test="username != null" >
-        username = #{username,jdbcType=VARCHAR},
-      </if>
-      <if test="password != null" >
-        password = #{password,jdbcType=VARCHAR},
-      </if>
-      <if test="email != null" >
-        email = #{email,jdbcType=VARCHAR},
-      </if>
-      <if test="phone != null" >
-        phone = #{phone,jdbcType=VARCHAR},
-      </if>
-      <if test="avatar != null" >
-        avatar = #{avatar,jdbcType=VARCHAR},
-      </if>
-      <if test="role != null" >
-        role = #{role,jdbcType=INTEGER},
-      </if>
-      <if test="createTime != null" >
-        create_time = #{createTime,jdbcType=VARCHAR},
-      </if>
-      <if test="updateTime != null" >
-        update_time = #{updateTime,jdbcType=VARCHAR},
-      </if>
-    </set>
-    where id = #{id,jdbcType=INTEGER}
-  </update>
+  <!--更新User-->
   <update id="updateByPrimaryKey" parameterType="top.chendaye666.websocket.model.po.User" >
     update user
     set username = #{username,jdbcType=VARCHAR},
@@ -139,27 +163,14 @@
       update_time = #{updateTime,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updatePasswordByUsername" parameterType="map">
-    update user
-    SET password = #{passwordNew},update_time = #{updateTime,jdbcType=VARCHAR}
-    where username = #{username}
-  </update>
 
-
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
-    select
-    <include refid="Base_Column_List" />
-    from user
-    where id = #{id,jdbcType=INTEGER}
-  </select>
+  <!--检查用户名-->
   <select id="checkUsername" resultType="int" parameterType="string" >
     select count(1) from user
     where username = #{username}
   </select>
-  <select id="checkEmail" resultType="int" parameterType="string" >
-    select count(1) from user
-    where email = #{email}
-  </select>
+
+  <!--登陆-->
   <select id="selectLogin" resultMap="BaseResultMap" parameterType="map">
     SELECT
     <include refid="Base_Column_List" />
@@ -167,13 +178,13 @@
     where username = #{username}
     and password = #{password}
   </select>
-  <select id="checkPassword" resultType="int" parameterType="map">
-    SELECT
-    count(1)
-    from user
-    where password = #{password}
-    and id = #{userId}
+
+  <select id="checkEmail" resultType="int" parameterType="string" >
+    select count(1) from user
+    where email = #{email}
   </select>
+
+
   <select id="checkEmailByUserId" resultType="int" parameterType="map">
     select count(1) from user
     where email = #{email}

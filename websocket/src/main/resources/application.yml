@@ -1,6 +1,9 @@
 server:
   port: 7777
 
+jwt:
+  key: chendaye666
+  expired: 24 # hour
 
 # https://segmentfault.com/a/1190000039005979
 spring:
