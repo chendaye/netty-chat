@@ -49,28 +49,56 @@ public class JWTService {
      * @return
      */
     public  String createRedisToken(User user, Boolean remember){
+        // 如果上一次的token还没有过期，直接返回上一次的token
+        UserToken redisToken = getRedisToken(user.getId());
+        if (redisToken.getToken() != null) return redisToken.getToken();
         // 登陆时间
         LocalDateTime loginAt = LocalDateTime.now();
         // 过期时间，如果是“记住我”，则Token有效期是7天，反之则是2个小时
-        LocalDateTime expireAt = loginAt.plusSeconds(remember ? TimeUnit.DAYS.toSeconds(7) : TimeUnit.MINUTES.toSeconds(120));
+        LocalDateTime expireAt = loginAt.plusSeconds(remember ? TimeUnit.DAYS.toSeconds(7) : TimeUnit.DAYS.toSeconds(2));
         // 距离过期时间剩余的秒数
         int expiresSeconds = (int) Duration.between(loginAt, expireAt).getSeconds();
 
         // 存储token对象到Redis中
         UserToken userToken = new UserToken();
-        userToken.setId(UUID.randomUUID().toString().replace("-", "#"));
+        String tokenId = UUID.randomUUID().toString().replace("-", "#");
+        String token = createToken(user, tokenId);
+        userToken.setId(tokenId);
+        userToken.setToken(token); // 保存原始的token
         userToken.setUserId(user.getId());
         userToken.setLoginAt(loginAt);
         userToken.setExpiresAt(expireAt);
         userToken.setRemember(remember);
         valueOperations.set("token#"+user.getId(), userToken, expiresSeconds, TimeUnit.SECONDS);
-        return  createToken(user, userToken);
+        if (token == null) throw new BizException("系统错误，token 创建失败！");
+        return  token;
+    }
+
+
+    /**
+     * 通过userId 从redis中获取其token
+     * @param userId
+     * @return
+     */
+    public UserToken getRedisToken(int userId){
+        // 从redis 中取token
+        Object token = valueOperations.get(getRedisKey(userId));
+        return token == null ? new UserToken() : JSON.parseObject(token.toString(), UserToken.class);
+    }
+
+    /**
+     * 获取redis key
+     * @param userId
+     * @return
+     */
+    public String getRedisKey(int userId){
+        return "token#"+userId;
     }
 
     /**
      * 加密生成token
      */
-    public  String createToken(User user, UserToken userToken) {
+    public  String createToken(User user, String tokenId) {
         try {
             final Algorithm signer = Algorithm.HMAC256(jwtKey);//生成签名
             Map<String, Object> jwtHeader = new HashMap<>();
@@ -85,7 +113,7 @@ public class JWTService {
                     .withClaim("password",user.getPassword())
                     // 这里不在Token上设置过期时间，过期时间由Redis维护
                     // .withExpiresAt(new Date(System.currentTimeMillis() + maxAge))
-                    .withJWTId(userToken.getId())
+                    .withJWTId(tokenId)
                     .sign(signer);
             return Base64.getEncoder().encodeToString(token.getBytes("utf-8"));
         } catch (Exception e) {
@@ -100,9 +128,7 @@ public class JWTService {
      * @return
      */
     public  Boolean deleteToken(User user) {
-        String redisTokenKey = "token#"+user.getId();
-        Boolean delete = stringObjectRedisTemplate.delete(redisTokenKey);
-        return delete;
+        return stringObjectRedisTemplate.delete(getRedisKey(user.getId()));
     }
 
 
@@ -123,13 +149,12 @@ public class JWTService {
             // 判断请求中的token 和 redis 中的 token 是否一致
             if (userId != null){
                 // 从redis 中取token
-                String redisTokenKey = "token#"+userId;
-                UserToken userToken = JSON.parseObject(valueOperations.get(redisTokenKey).toString(), UserToken.class);
+                UserToken userToken = getRedisToken(userId);
                 if (userToken != null && userToken.getId().equals(jwt.getId()) && userToken.getUserId().equals(userId)){
-                    System.out.println(">>>>>UserToken="+userToken.toString());
                     //token 合法，续约
-                    long renewTime = userToken.getRemember() ? TimeUnit.DAYS.toSeconds(7) : TimeUnit.MINUTES.toSeconds(120);
-                    Boolean status = stringObjectRedisTemplate.expire(redisTokenKey, renewTime, TimeUnit.SECONDS);
+//                    long renewTime = userToken.getRemember() ? TimeUnit.DAYS.toSeconds(7) : TimeUnit.MINUTES.toSeconds(120);
+                    long renewTime = userToken.getRemember() ? TimeUnit.DAYS.toSeconds(7) : TimeUnit.DAYS.toSeconds(2);
+                    Boolean status = stringObjectRedisTemplate.expire(getRedisKey(userId), renewTime, TimeUnit.SECONDS);
                 }else{
                     throw new BizException("9999","token 无效！");
                 }
@@ -138,7 +163,7 @@ public class JWTService {
             }
             return jwt;
         } catch (IllegalArgumentException | JWTVerificationException | UnsupportedEncodingException e) {
-            throw new BizException("9999",e.getMessage());
+            throw new BizException("9999", "token 验证失败 "+e.getMessage());
         }
     }
 }

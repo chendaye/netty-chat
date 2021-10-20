@@ -12,6 +12,8 @@ public class UserToken implements Serializable {
     private static final long serialVersionUID = 1283786048011980426L;
     // token id
     private String id;
+    // token
+    private String token;
     // userId
     private Integer userId;
     // 授权时间
@@ -24,17 +26,16 @@ public class UserToken implements Serializable {
     public UserToken() {
     }
 
-    public UserToken(String id, Integer userId, LocalDateTime loginAt, LocalDateTime expiresAt, boolean remember) {
+    public UserToken(String id, String token, Integer userId, LocalDateTime loginAt, LocalDateTime expiresAt, boolean remember) {
         this.id = id;
+        this.token = token;
         this.userId = userId;
         this.loginAt = loginAt;
         this.expiresAt = expiresAt;
         this.remember = remember;
     }
 
-    public static long getSerialVersionUID() {
-        return serialVersionUID;
-    }
+
 
     public String getId() {
         return id;
@@ -42,6 +43,14 @@ public class UserToken implements Serializable {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 
     public Integer getUserId() {
@@ -80,7 +89,8 @@ public class UserToken implements Serializable {
     public String toString() {
         return "UserToken{" +
                 "id='" + id + '\'' +
-                ", userId='" + userId + '\'' +
+                ", token='" + token + '\'' +
+                ", userId=" + userId +
                 ", loginAt=" + loginAt +
                 ", expiresAt=" + expiresAt +
                 ", remember=" + remember +

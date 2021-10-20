@@ -1,12 +1,16 @@
 package top.chendaye666.websocket.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
+import top.chendaye666.websocket.Exception.BizException;
 import top.chendaye666.websocket.common.ServerResponse;
 import top.chendaye666.websocket.mock.GroupInfoDao;
 import top.chendaye666.websocket.model.po.GroupInfo;
+import top.chendaye666.websocket.model.po.UserToken;
 import top.chendaye666.websocket.service.ChatService;
+import top.chendaye666.websocket.service.JWTService;
 import top.chendaye666.websocket.util.ChatType;
 import top.chendaye666.websocket.util.Constant;
 import org.slf4j.Logger;
@@ -27,49 +31,76 @@ public class ChatServiceImpl implements ChatService{
     @Autowired
     private GroupInfoDao groupDao;
 
+    @Autowired
+    private JWTService jwtService;
+
     /**
      * 上线注册
-     * {"content":"content","type":"REGISTER","status":200,"userId":"001"}
+     * {"content":"content","type":"REGISTER","status":200,"token":"001"}
      * @param param
      * @param ctx
      */
     @Override
     public void register(JSONObject param, ChannelHandlerContext ctx) {
-        String userId = (String)param.get("userId");
-        //todo: 注册 <user,channel>
-        Constant.onlineUserMap.put(userId, ctx);
+        String token = (String)param.get("token");
+
+        //todo: 注册 <user-token,channel>
+        Constant.onlineUserMap.put(token, ctx);
+        // 响应请求
         HashMap<String, ChatType> data = new HashMap<>();
         data.put("type", ChatType.REGISTER);
         String responseJson = ServerResponse.createBySuccess(data).toString();
         sendMessage(ctx, responseJson);
-        LOGGER.info(MessageFormat.format("userId为 {0} 的用户登记到在线用户表，当前在线人数为：{1}"
-                , userId, Constant.onlineUserMap.size()));
+
+        LOGGER.info(MessageFormat.format("上线成功，当前在线人数为：{0}"
+                , Constant.onlineUserMap.size()));
     }
 
     /**
      * 单聊
-     * 消息格式：{"content":"content","type":"SINGLE_SENDING","status":200,"fromUserId":"001", "toUserId":"002"}
+     * 消息格式：{"content":"content","type":"SINGLE_SENDING","status":200,"fromUserToken":"001", "toUserToken":"002"}
      * @param param
      * @param ctx
      */
     @Override
     public void singleSend(JSONObject param, ChannelHandlerContext ctx) {
-        String fromUserId = (String)param.get("fromUserId");
-        String toUserId = (String)param.get("toUserId");
+        String fromUserToken = (String)param.get("fromUserToken");
+        String toUserToken = (String)param.get("toUserToken");
         String content = (String)param.get("content");
-        ChannelHandlerContext toUserCtx = Constant.onlineUserMap.get(toUserId);
+        // 要发送的对象
+        ChannelHandlerContext toUserCtx = Constant.onlineUserMap.get(toUserToken);
         if (toUserCtx == null) {
-            String responseJson = ServerResponse.createByErrorMessage(MessageFormat.format("userId为 {0} 的用户没有登录！", toUserId)).toString();
+            String responseJson = ServerResponse.createByErrorMessage("用户未上线！").toString();
             sendMessage(ctx, responseJson);
         } else {
             HashMap<String, String> data = new HashMap<>();
-            data.put("fromUserId", fromUserId);
-            data.put("content", content);
+            data.put("fromUserToken", fromUserToken);
             data.put("content", content);
             data.put("type", ChatType.SINGLE_SENDING.toString());
             String responseJson = ServerResponse.createBySuccess(data).toString();
             sendMessage(toUserCtx, responseJson);
         }
+    }
+
+    /**
+     * 机器人聊天
+     * @param param
+     * @param ctx
+     */
+    public void robot(JSONObject param, ChannelHandlerContext ctx){
+        String token = (String)param.get("token");
+
+        //todo: 注册 <user-token,channel>
+        Constant.onlineUserMap.put(token, ctx);
+
+        //todo: 响应请求
+        HashMap<String, ChatType> data = new HashMap<>();
+        data.put("type", ChatType.ROBOT);
+        data.put("content", null); // 返回内容
+        String responseJson = ServerResponse.createBySuccess(data).toString();
+        sendMessage(ctx, responseJson);
+
+        LOGGER.info("机器人聊天中....");
     }
 
     /**

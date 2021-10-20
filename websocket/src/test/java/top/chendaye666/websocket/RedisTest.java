@@ -9,6 +9,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.test.context.junit4.SpringRunner;
 import top.chendaye666.websocket.model.po.UserToken;
+import top.chendaye666.websocket.service.JWTService;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -29,6 +30,9 @@ public class RedisTest {
     @Autowired
     RedisTemplate<String, Object> stringObjectRedisTemplate;
 
+    @Autowired
+    JWTService jwtService;
+
     @Test
     public void ValueOperationsTest(){
         valueOperations.set("chendaye666", "777");
@@ -36,10 +40,17 @@ public class RedisTest {
 
     @Test
     public void  ValueObjectOperationsTest(){
-        UserToken userToken = new UserToken("123", 4, LocalDateTime.now(), LocalDateTime.now().plusSeconds(TimeUnit.MINUTES.toSeconds(120)), true);
+        UserToken userToken = new UserToken("123","token", 4, LocalDateTime.now(), LocalDateTime.now().plusSeconds(TimeUnit.MINUTES.toSeconds(120)), true);
         objectOperations.set("objectOperations", userToken);
         UserToken token = (UserToken)this.objectOperations.get("objectOperations");
         System.out.println(token);
+    }
+
+    @Test
+    public void DeleteTokenTest(){
+        String redisTokenKey = "token#8";
+        Boolean delete = stringObjectRedisTemplate.delete(redisTokenKey);
+        System.out.println(delete);
     }
 
     @Test

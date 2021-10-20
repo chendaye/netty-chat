@@ -29,8 +29,10 @@ public class HttpRequestHandler extends SimpleChannelInboundHandler<Object> {
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, Object msg) throws Exception {
         if (msg instanceof FullHttpRequest) {
+            // 如果是http请求就处理
             handleHttpRequest(ctx, (FullHttpRequest) msg);
         } else if (msg instanceof WebSocketFrame) {
+            // 如果是websocket请求就交给 websocketServerHandler处理
             ctx.fireChannelRead(((WebSocketFrame) msg).retain());
         } 
     }
@@ -41,6 +43,7 @@ public class HttpRequestHandler extends SimpleChannelInboundHandler<Object> {
      * @param req
      */
     private void handleHttpRequest(ChannelHandlerContext ctx, FullHttpRequest req) {
+        // 坏请求
         if (!req.decoderResult().isSuccess()) {
             sendHttpResponse(ctx, req,
                     new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.BAD_REQUEST));
@@ -55,12 +58,19 @@ public class HttpRequestHandler extends SimpleChannelInboundHandler<Object> {
         Constant.webSocketHandshakerMap.put(ctx.channel().id().asLongText(), handshaker);
 
         if (handshaker == null) {
+            // 不支持的响应版本
             WebSocketServerHandshakerFactory.sendUnsupportedVersionResponse(ctx.channel());
         } else {
             handshaker.handshake(ctx.channel(), req);
         }
     }
-    
+
+    /**
+     * 发送http响应
+     * @param ctx
+     * @param req
+     * @param res
+     */
     private void sendHttpResponse(ChannelHandlerContext ctx, FullHttpRequest req, DefaultFullHttpResponse res) {
         // 返回应答给客户端
         if (res.status().code() != 200) {

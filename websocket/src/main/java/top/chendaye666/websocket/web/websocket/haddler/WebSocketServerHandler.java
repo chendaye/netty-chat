@@ -2,12 +2,15 @@ package top.chendaye666.websocket.web.websocket.haddler;
 
 
 import com.alibaba.fastjson.JSONObject;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import io.netty.channel.ChannelHandler.Sharable;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.websocketx.*;
+import top.chendaye666.websocket.Exception.BizException;
 import top.chendaye666.websocket.common.ServerResponse;
 import top.chendaye666.websocket.service.ChatService;
+import top.chendaye666.websocket.service.JWTService;
 import top.chendaye666.websocket.util.Constant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +29,9 @@ public class WebSocketServerHandler extends SimpleChannelInboundHandler<WebSocke
     
     @Autowired
     private ChatService chatService;
+
+    @Autowired
+    private JWTService jwtService;
 
     /**
      * 描述：读取完连接的消息后，对消息进行处理。
@@ -69,6 +75,7 @@ public class WebSocketServerHandler extends SimpleChannelInboundHandler<WebSocke
         LOGGER.info("服务端收到新信息：" + request);
         JSONObject param = null;
         try {
+            // 消息解析为json
             param = JSONObject.parseObject(request);
             System.out.println(param.toString());
         } catch (Exception e) {
@@ -80,26 +87,46 @@ public class WebSocketServerHandler extends SimpleChannelInboundHandler<WebSocke
             return;
         }
 
+        //todo： token 验证
+        validToken(ctx, param);
+        //todo: 消息分发
         String type = (String) param.get("type");
         switch (type) {
-            case "REGISTER":
+            case "ROBOT":
+                chatService.robot(param, ctx); // 机器人聊天
+                break;
+            case "REGISTER": // 聊天注册
                 chatService.register(param, ctx);
                 break;
-            case "SINGLE_SENDING":
+            case "SINGLE_SENDING": // 单聊
                 chatService.singleSend(param, ctx);
                 break;
-            case "GROUP_SENDING":
+            case "GROUP_SENDING": // 群聊
                 chatService.groupSend(param, ctx);
                 break;
-            case "FILE_MSG_SINGLE_SENDING":
+            case "FILE_MSG_SINGLE_SENDING": // 文件单发
                 chatService.FileMsgSingleSend(param, ctx);
                 break;
-            case "FILE_MSG_GROUP_SENDING":
+            case "FILE_MSG_GROUP_SENDING": // 文件群发
                 chatService.FileMsgGroupSend(param, ctx);
                 break;
             default:
                 chatService.typeError(ctx);
                 break;
+        }
+    }
+
+    /**
+     * token 验证
+     */
+    public void validToken(ChannelHandlerContext ctx, JSONObject param){
+        try {
+            // 获取当前要注册聊天的用户 token
+            String token = (String)param.get("token");
+            DecodedJWT jwt = jwtService.verifyToken(token);
+        }catch (Exception e){
+            sendErrorMessage(ctx, "token 验证失败！");
+            throw new BizException("token 验证失败！");
         }
     }
     

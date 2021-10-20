@@ -109,12 +109,11 @@ public class UserServiceImpl implements IUserService {
         if (user == null){
             return ServerResponse.createByErrorMessage("密码错误！");
         }
-
-
         // 信息正确
         user.setPassword(StringUtils.EMPTY);
         HashMap<String, Object> map = new HashMap<>();
         map.put("user", user);
+        // 获取token
         String redisToken = jwtService.createRedisToken(user, remember);
         map.put("token", redisToken);
         return ServerResponse.createBySuccess("登录成功！", map);
