@@ -43,7 +43,7 @@ public class ChatServiceImpl implements ChatService{
     @Override
     public void register(JSONObject param, ChannelHandlerContext ctx) {
         String token = (String)param.get("token");
-
+        LOGGER.info("上线注册: "+token);
         //todo: 注册 <user-token,channel>
         Constant.onlineUserMap.put(token, ctx);
         // 响应请求
@@ -69,6 +69,7 @@ public class ChatServiceImpl implements ChatService{
         String content = (String)param.get("content");
         // 要发送的对象
         ChannelHandlerContext toUserCtx = Constant.onlineUserMap.get(toUserToken);
+        LOGGER.info("发送人="+fromUserToken);
         if (toUserCtx == null) {
             String responseJson = ServerResponse.createByErrorMessage("用户未上线！").toString();
             sendMessage(ctx, responseJson);

@@ -89,6 +89,7 @@ public class WebSocketServerHandler extends SimpleChannelInboundHandler<WebSocke
 
         //todo： token 验证
         validToken(ctx, param);
+        LOGGER.info("验证：" + param.toString());
         //todo: 消息分发
         String type = (String) param.get("type");
         switch (type) {
@@ -122,7 +123,7 @@ public class WebSocketServerHandler extends SimpleChannelInboundHandler<WebSocke
     public void validToken(ChannelHandlerContext ctx, JSONObject param){
         try {
             // 获取当前要注册聊天的用户 token
-            String token = (String)param.get("token");
+            String token = (String)(param.get("fromUserToken") == null ? param.get("token") : param.get("fromUserToken"));
             DecodedJWT jwt = jwtService.verifyToken(token);
         }catch (Exception e){
             sendErrorMessage(ctx, "token 验证失败！");
