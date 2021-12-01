@@ -59,6 +59,11 @@ token ****
 {"content":"content","type":"SINGLE_SENDING","status":200,"fromUserToken":"xxx", "toUserToken":"xxx"}
 
 ```
+# 运行
+
+```bash
+nohup java -jar websocket-1.0-SNAPSHOT.jar 1>/dev/null 2>&1 &
+```
 
 # 打包问题
 
